@@ -1,0 +1,53 @@
+<div class="dashboard-container">
+  
+  <h1 class="dashboard-title">🌿 Panel de Control Vivero La Vega</h1>
+  
+  @if (resumen()) {
+    <div class="stats-grid">
+      
+      <div class="card card-sales">
+        <h3 class="card-title">Ventas Totales</h3>
+        <p class="card-value">
+          {{ resumen().totalVentasRealizadas }}
+        </p>
+      </div>
+
+      <div class="card card-income">
+        <h3 class="card-title">Ingresos</h3>
+        <p class="card-value">
+          {{ resumen().ingresosTotales | currency }}
+        </p>
+      </div>
+      
+    </div>
+
+    <div class="featured-product-box">
+      <h3 class="featured-title">🌟 Producto más vendido</h3>
+      <p class="featured-text">
+        <strong>{{ resumen().productoMasVendido }}</strong> 
+        con <span class="highlight-text">{{ resumen().unidadesDelProductoMasVendido }}</span> unidades.
+      </p>
+    </div>
+
+    <div class="product-inventory-link">
+  <button routerLink="/productos" class="products-btn">
+    📦 Ver Inventario de Productos
+  </button>
+</div>
+
+  } @else {
+    <div class="loading-box">
+      <p>Cargando estadísticas del servidor...</p>
+    </div>
+  }
+
+  <footer class="user-footer">
+    <div class="user-info">
+      <span class="user-icon">👤</span>
+      <span class="username">{{ obtenerNombreUsuario() }}</span>
+      <span class="divider">|</span>
+      <button class="logout-btn" (click)="cerrarSesion()">Cerrar Sesión</button>
+    </div>
+  </footer>
+
+</div>

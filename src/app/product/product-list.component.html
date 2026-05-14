@@ -1,0 +1,29 @@
+    <div class="container">
+      <div class="header" >
+        <h1 >🌿 Inventario de Productos</h1>
+        <button class="back-button" routerLink="/dashboard" >Volver al Panel</button>
+      </div>
+
+      <table class="product-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Producto</th>
+            <th>Categoría</th>
+            <th>P. Compra</th>
+            <th>P. Venta</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (p of productos(); track p.id) {
+            <tr>
+              <td>{{ p.id }}</td>
+              <td>{{ p.producto }}</td>
+              <td><span class="badge">{{ p.categoria }}</span></td>
+              <td>{{ p.precioCompra | currency }}</td>
+              <td>{{ p.precioVenta | currency }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>

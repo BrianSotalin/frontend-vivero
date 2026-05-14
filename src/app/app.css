@@ -1,0 +1,15 @@
+/* src/app/app.css */
+.toast-notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background-color: #4caf50; /* Verde */
+  color: white;
+  padding: 16px 28px;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  z-index: 10000; /* Asegura que esté por encima de todo */
+  min-width: 200px;
+  font-weight: bold;
+  display: block !important;
+}

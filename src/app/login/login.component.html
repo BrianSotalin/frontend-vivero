@@ -1,0 +1,37 @@
+<div class="login-wrapper">
+  <div class="login-card">
+    <div class="login-header">
+      <span class="logo-icon">🌿</span>
+      <h2>Vivero La Vega</h2>
+      <p>Gestión de inventario y ventas</p>
+    </div>
+    
+    <form (ngSubmit)="onLogin()" #loginForm="ngForm">
+      <div class="input-group">
+        <label>Usuario</label>
+        <input 
+          type="text" 
+          name="username" 
+          [(ngModel)]="credentials.username" 
+          placeholder="Ingresa tu usuario"
+          required>
+      </div>
+      
+      <div class="input-group">
+        <label>Contraseña</label>
+        <input 
+          type="password" 
+          name="password" 
+          [(ngModel)]="credentials.password" 
+          placeholder="••••••••"
+          required>
+      </div>
+
+      <button type="submit" [disabled]="!loginForm.valid">
+        Entrar al Sistema
+      </button>
+    </form>
+
+    <p *ngIf="errorMessage" class="error-msg">{{ errorMessage }}</p>
+  </div>
+</div>
