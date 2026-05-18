@@ -1,0 +1,40 @@
+    <div class="form-wrapper">
+      <div class="form-card">
+        <h2>🌿 Nuevo Producto</h2>
+        <form (ngSubmit)="guardar()">
+          <div class="input-group">
+            <label>Nombre del Producto</label>
+            <input type="text" [(ngModel)]="nuevoProducto.producto" name="nombre" required>
+          </div>
+          
+<div class="input-group">
+  <label for="categoria">Categoría</label>
+  <select 
+    id="categoria"
+    [(ngModel)]="nuevoProducto.categoria" 
+    name="categoria" 
+    required>
+    <option value="" disabled selected>Seleccione una categoría</option>
+    <option value="Fundas">Fundas</option>
+    <option value="Saquillos">Saquillos</option>
+  </select>
+</div>
+
+          <div style="display: flex; gap: 10px;">
+            <div class="input-group">
+              <label>P. Compra</label>
+              <input type="number" [(ngModel)]="nuevoProducto.precioCompra" name="pCompra" required>
+            </div>
+            <div class="input-group">
+              <label>P. Venta</label>
+              <input type="number" [(ngModel)]="nuevoProducto.precioVenta" name="pVenta" required>
+            </div>
+          </div>
+
+          <div class="actions">
+            <button type="submit" class="btn-save">Guardar Planta</button>
+            <button type="button" routerLink="/productos" class="btn-cancel">Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>

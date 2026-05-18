@@ -1,0 +1,81 @@
+ .form-wrapper { 
+    display: flex; 
+    justify-content: center; 
+    padding: 40px; 
+    background: #f1f8e9; 
+    min-height: 80vh; 
+}
+    .form-card { 
+        background: white; 
+        padding: 30px; 
+        border-radius: 12px; 
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
+        width: 100%; 
+        max-width: 500px; 
+        border-top: 5px solid #4caf50; 
+    }
+    /* EStilos lista categorias */
+    .input-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+}
+
+.input-group label {
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+.input-group select {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  background-color: white;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.input-group select:focus {
+  outline: none;
+  border-color: #2e7d32; /* Verde para combinar con tu botón */
+}
+
+    h2 { 
+        color: #2e7d32; 
+        margin-bottom: 20px; 
+        text-align: center; }
+    .input-group {
+         margin-bottom: 15px; 
+         flex: 1; }
+    label { 
+        display: block; 
+        margin-bottom: 5px; 
+        color: #666; 
+        font-weight: bold; }
+    input { 
+        width: 100%; 
+        padding: 10px; 
+        border: 1px solid #ddd; 
+        border-radius: 6px; 
+        box-sizing: border-box; }
+    .actions { 
+        display: flex; 
+        flex-direction: column; 
+        gap: 10px; 
+        margin-top: 20px; }
+    .btn-save { 
+        background: #2e7d32; 
+        color: white; 
+        border: none; 
+        padding: 12px; 
+        border-radius: 8px; 
+        cursor: pointer; 
+        font-weight: bold; }
+    .btn-cancel { 
+        background: #eee; 
+        color: #666; 
+        border: none; 
+        padding: 12px; 
+        border-radius: 8px; 
+        cursor: pointer; }

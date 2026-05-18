@@ -3,7 +3,8 @@ import { LoginComponent } from './login/login.component';
 import { DashboardComponent } from './stadistics/dashboard.component';
 import { UnauthorizedComponent } from './error/unauthorized.component';
 import { authGuard } from './guards/auth.guard';
-import { ProductListComponent } from './product/product-list.component';
+import { ProductListComponent } from './product/product-list/product-list.component';
+import { ProductFormComponent } from './product/product-form/product-form.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent},
@@ -12,6 +13,7 @@ export const routes: Routes = [
     canActivate: [authGuard]
   },
   { path: 'productos', component: ProductListComponent, canActivate: [authGuard] },
+  { path: 'productos/nuevo', component: ProductFormComponent, canActivate: [authGuard]},
   { path: 'unauthorized', component: UnauthorizedComponent },
   { path: '',redirectTo: 'login', pathMatch: 'full' },
   { path: '**', redirectTo: 'login' }

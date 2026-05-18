@@ -12,4 +12,12 @@ export class ProductService {
   getProductos(): Observable<any[]> {
     return this.http.get<any[]>(this.apiUrl);
   }
+  // En src/app/services/product.service.ts
+createProducto(producto: any): Observable<any> {
+  return this.http.post(this.apiUrl, producto);
+}
+// En src/app/services/product.service.ts
+deleteProducto(id: number): Observable<any> {
+  return this.http.delete(`${this.apiUrl}/${id}`);
+}
 }
