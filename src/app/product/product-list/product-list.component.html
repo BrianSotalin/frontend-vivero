@@ -20,7 +20,7 @@
           </tr>
         </thead>
         <tbody>
-          @for (p of productos(); track p.id) {
+          @for (p of productosPaginados(); track p.id) {
             <tr>
               <td>{{ p.id }}</td>
               <td>{{ p.producto }}</td>
@@ -37,6 +37,28 @@
           }
         </tbody>
       </table>
+      <div class="pagination-container">
+    <div class="page-size-selector">
+      <label>Mostrar: </label>
+      <select [(ngModel)]="productosPorPagina" (change)="cambiarTamano()">
+        <option [ngValue]="5">5 productos</option>
+        <option [ngValue]="10">10 productos</option>
+        <option [ngValue]="20">20 productos</option>
+      </select>
+    </div>
+
+    <div class="page-buttons">
+      <button (click)="cambiarPagina(paginaActual() - 1)" [disabled]="paginaActual() === 1" class="btn-page">
+        <span class="material-icons">chevron_left</span>
+      </button>
+      
+      <span class="page-info">Página {{ paginaActual() }} de {{ totalPaginas() || 1 }}</span>
+      
+      <button (click)="cambiarPagina(paginaActual() + 1)" [disabled]="paginaActual() === totalPaginas() || totalPaginas() === 0" class="btn-page">
+        <span class="material-icons">chevron_right</span>
+      </button>
+    </div>
+  </div>
       <div class="btn-return-container">
         <button class="back-button" routerLink="/dashboard">Volver al Panel</button>
       </div>
