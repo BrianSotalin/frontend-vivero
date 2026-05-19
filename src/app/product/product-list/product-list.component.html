@@ -27,8 +27,12 @@
               <td><span class="badge">{{ p.categoria }}</span></td>
               <td>{{ p.precioCompra | currency }}</td>
               <td>{{ p.precioVenta | currency }}</td>
-              <!-- BOTÓN ELIMINAR -->
+              
+              <!-- BOTÓN ELIMINAR Y EDITAR-->
           <td style="text-align: center;">
+            <button [routerLink]="['/productos/editar', p.id]" class="btn-edit-row" title="Editar">
+               <span class="material-icons" style="color: #1976d2;">edit</span>
+             </button>
             <button class="btn-delete-row" (click)="abrirConfirmacion(p, miModal)">
               <span class="material-icons icon-rojo">delete</span>
             </button>

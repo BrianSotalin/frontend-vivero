@@ -186,6 +186,22 @@
   width: 100%;
   max-width: 400px;
 }
+/* Estilo para el botón de editar */
+
+.btn-edit-row {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  transition: background-color 0.2s;
+}
+
+.btn-edit-row:hover {
+  background-color: #e3f2fd; /* Azul suave */
+}
 
 /* Fondo oscurecido detrás del modal */
 .confirm-modal::backdrop {
