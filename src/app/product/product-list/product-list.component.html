@@ -2,6 +2,14 @@
       <div class="header" >
         <h1 >🌿 Inventario de Productos</h1>
       </div>
+      <div class="search-box" style="margin-bottom: 15px;">
+    <input 
+      type="text" 
+      [(ngModel)]="searchText" 
+      (ngModelChange)="onSearchChange()"
+      placeholder="Buscar producto por nombre..." 
+    />
+  </div>
   <div class="add-button-container">
     <button class="btn-new-plant" routerLink="/productos/nuevo">
       <span class="material-icons">add_circle</span>

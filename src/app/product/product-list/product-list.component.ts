@@ -14,6 +14,7 @@ import { FormsModule } from '@angular/forms';
 export class ProductListComponent implements OnInit {
   private productService = inject(ProductService);
   productos = signal<any[]>([]);
+  searchText = signal<string>('');
   // Guardamos temporalmente el producto que se planea eliminar
   productoSeleccionado = signal<any>(null);
 
@@ -21,17 +22,27 @@ export class ProductListComponent implements OnInit {
   paginaActual = signal<number>(1);
   productosPorPagina = signal<number>(5); // Por defecto inicializa en 5
 
+    productosFiltrados = computed(() => {
+    const texto = this.searchText().toLowerCase().trim();
+    if (!texto) return this.productos(); // Si no hay búsqueda, devuelve todos
+    
+    return this.productos().filter(prod => 
+      prod.producto && prod.producto.toLowerCase().includes(texto)
+    );
+  });
+  
   // --- LÓGICA REACTIVA (COMPUTED) ---
   // Calcula el total de páginas necesarias
-  totalPaginas = computed(() => {
-    return Math.ceil(this.productos().length / this.productosPorPagina());
+totalPaginas = computed(() => {
+    return Math.ceil(this.productosFiltrados().length / this.productosPorPagina());
   });
 
   // Filtra y corta la lista original para devolver solo los productos de la página activa
   productosPaginados = computed(() => {
-    const inicio = (this.paginaActual() - 1) * this.productosPorPagina();
+const texto = this.searchText().toLowerCase().trim();
+const inicio = (this.paginaActual() - 1) * this.productosPorPagina();
     const fin = inicio + this.productosPorPagina();
-    return this.productos().slice(inicio, fin);
+    return this.productosFiltrados().slice(inicio, fin);
   });
 
   ngOnInit() {
@@ -42,6 +53,10 @@ export class ProductListComponent implements OnInit {
       next: (data) => this.productos.set(data),
       error: (err) => console.error('Error cargando productos', err)
     });
+  }
+  // Al escribir en el buscador, reiniciamos a la página 1 para evitar bugs visuales
+  onSearchChange() {
+    this.paginaActual.set(1);
   }
   // Abre el modal guardando el producto seleccionado
   abrirConfirmacion(producto: any, modal: HTMLDialogElement) {
