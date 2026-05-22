@@ -1,21 +1,24 @@
     <div class="container">
       <div class="header" >
-        <h1 >🌿 Inventario de Productos</h1>
+        <h2 >
+         
+          Inventario de Productos
+        </h2>
       </div>
-      <div class="search-box" style="margin-bottom: 15px;">
+       <div class="actions-header">
     <input 
       type="text" 
       [(ngModel)]="searchText" 
       (ngModelChange)="onSearchChange()"
       placeholder="Buscar producto por nombre..." 
+      class="search-input"
     />
-  </div>
-  <div class="add-button-container">
     <button class="btn-new-plant" routerLink="/productos/nuevo">
       <span class="material-icons">add_circle</span>
-      Añadir Nueva Planta
+      Nueva Planta
     </button>
-  </div>
+       </div>
+
       <table class="product-table">
         <thead>
           <tr>
@@ -71,15 +74,13 @@
       </button>
     </div>
   </div>
-      <div class="btn-return-container">
-        <button class="back-button" routerLink="/dashboard">Volver al Panel</button>
-      </div>
+
     </div>
 
     <!-- MODAL NATIVO DE CONFIRMACIÓN -->
 <dialog #miModal class="confirm-modal">
   <div class="modal-content">
-    <span class="modal-alert-icon">⚠️</span>
+    <span class="material-icons alert">warning</span>
     <h2>¿Eliminar Producto?</h2>
     <p>¿Estás seguro de que deseas quitar <strong>{{ productoSeleccionado()?.producto }}</strong> del inventario? Esta acción no se puede deshacer.</p>
     

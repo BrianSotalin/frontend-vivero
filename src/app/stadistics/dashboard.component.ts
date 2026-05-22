@@ -2,12 +2,12 @@ import { Component, inject, signal, afterNextRender } from '@angular/core';
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import { AuthService } from '../services/auth.service';
 import { EstadisticasService } from '../services/stadistics.service';
-import { RouterLink } from '@angular/router';
+
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, CurrencyPipe, RouterLink], // Importante para usar *ngIf y pipes
+  imports: [CommonModule, CurrencyPipe], // Importante para usar *ngIf y pipes
   templateUrl: 'dashboard.component.html',
   styleUrl: 'dashboard.component.css'
 })

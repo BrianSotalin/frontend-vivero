@@ -1,12 +1,4 @@
-/* Contenedor Principal con solución para el Footer */
-.dashboard-container {
-  font-family: sans-serif;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh; /* Ocupa el alto total de la pantalla de tu Mac */
-  box-sizing: border-box;
-}
+
 
 /* Título */
 .dashboard-title {
@@ -60,6 +52,10 @@
 .featured-title {
   margin-top: 0;
 }
+.estrella {
+  color: #ff9800;
+  margin-right: 8px;
+}
 
 .featured-text {
   font-size: 18px;
@@ -76,6 +72,25 @@
   color: #666;
 }
 
+/* Contenedor para los enlaces de navegación */
+.container-link {
+  display: flex;         /* Activa el modo flexible */
+  justify-content: space-between; /* Separa los botones: izq, centro y der */
+  align-items: center;   /* Los alinea verticalmente al centro */
+  width: 100%;           /* Asegura que use todo el ancho disponible */
+  gap: 10px;             /* Espacio opcional entre botones */
+}
+
+/* Estilo para que los iconos y el texto dentro del botón se vean bien */
+.container-link button {
+  display: flex;
+  align-items: center;
+  gap: 8px;              /* Separa el icono del texto */
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+
 /* Boton de Productos */
 .products-btn {
   margin-top: 20px;
@@ -86,6 +101,55 @@
   border-radius: 4px;
   cursor: pointer;
   font-size: 16px;
+  transition: background-color 0.2s;
+}
+span.material-icons {
+  vertical-align: middle;
+  line-height: 1;
+}
+/*Boton de Clientes */
+.clients-btn {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #2196f3;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.2s;
+}
+/*Boton de Usuarios */
+.users-btn {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #9c27b0;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.2s;
+}
+/*Container para el botón de ventas */
+.container-ventas {
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+}
+/* Botón de ventas */
+.sales-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background-color: #ff5722;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: bold;
   transition: background-color 0.2s;
 }
 
@@ -134,4 +198,18 @@
 
 .logout-btn:hover {
   color: #b71c1c;
+}
+@media (max-width: 480px) {
+  .dashboard-title {
+    font-size: 1.5rem;
+    text-align: center;
+  }
+
+  .card {
+    padding: 15px;
+  }
+
+  .card-value {
+    font-size: 20px;
+  }
 }

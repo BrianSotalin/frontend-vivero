@@ -1,0 +1,88 @@
+<div class="container">
+  <h2>
+    <span class="material-icons user-icon">group</span>
+    Directorio de Clientes
+</h2>
+
+  <div class="actions-header">
+    <input 
+      type="text" 
+      [(ngModel)]="searchText" 
+      (ngModelChange)="onSearchChange()"
+      placeholder="Buscar cliente por nombre..." 
+      class="search-input"
+    />
+    <button routerLink="/clientes/nuevo" class="btn-add">
+        <span class="material-icons">add_circle</span>
+      Nuevo Cliente
+    </button>
+  </div>
+
+  <table class="client-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Teléfono</th>
+        <th>Email</th>
+        <th style="text-align: center;">Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let cli of clientesPaginados()">
+        <td>{{ cli.id }}</td>
+        <td>{{ cli.nombre }}</td>
+        <td><span class="badge">{{ cli.telefono || 'N/A' }}</span></td>
+        <td>{{ cli.email || 'N/A' }}</td>
+          <td style="text-align: center;">
+            <button [routerLink]="['/clientes/editar', cli.id]" class="btn-edit-row" title="Editar">
+               <span class="material-icons" style="color: #1976d2;">edit</span>
+             </button>
+            <button class="btn-delete-row" (click)="abrirConfirmacion(cli, modalEliminar)">
+              <span class="material-icons icon-rojo">delete</span>
+            </button>
+          </td>
+      </tr>
+      <tr *ngIf="clientesPaginados().length === 0">
+        <td colspan="4" class="empty-message">
+          No se encontraron clientes.
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+      <div class="pagination-container">
+    <div class="page-size-selector">
+      <label>Mostrar: </label>
+      <select [(ngModel)]="clientesPorPagina" (change)="cambiarTamano()">
+        <option [ngValue]="5">5 clientes</option>
+        <option [ngValue]="10">10 clientes</option>
+        <option [ngValue]="20">20 clientes</option>
+      </select>
+    </div>
+
+    <div class="page-buttons">
+      <button (click)="cambiarPagina(paginaActual() - 1)" [disabled]="paginaActual() === 1" class="btn-page">
+        <span class="material-icons">chevron_left</span>
+      </button>
+      
+      <span class="page-info">Página {{ paginaActual() }} de {{ totalPaginas() || 1 }}</span>
+      
+      <button (click)="cambiarPagina(paginaActual() + 1)" [disabled]="paginaActual() === totalPaginas() || totalPaginas() === 0" class="btn-page">
+        <span class="material-icons">chevron_right</span>
+      </button>
+    </div>
+  </div>
+
+</div>
+
+<dialog #modalEliminar class="confirm-modal">
+  <div class="modal-content">
+   <span class="material-icons alert">warning</span>
+    <p>¿Seguro que deseas eliminar al cliente <b>{{ clienteSeleccionado()?.nombre }}</b>?</p>
+    <div class="modal-actions">
+      <button (click)="confirmarEliminar(modalEliminar)" class="btn-confirm-delete">Sí, eliminar</button>
+      <button (click)="cerrarModal(modalEliminar)" class="btn-cancel-delete">Cancelar</button>
+    </div>
+  </div>
+</dialog>

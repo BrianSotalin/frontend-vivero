@@ -1,6 +1,63 @@
-<router-outlet></router-outlet>
-@if (toast().show) {
+<div class="app-layout" [class.no-sidebar]="!isLoggedIn()">
+  
+<!-- Botón Hamburguesa (Solo visible en móviles) -->
+@if (isLoggedIn()) {
+  <button class="mobile-menu-btn" (click)="toggleMenu()">
+    <span class="material-icons">{{ isMenuOpen() ? 'close' : 'menu' }}</span>
+  </button>
+}
+
+<aside class="sidebar" [class.open]="isMenuOpen()">
+    <div class="sidebar-header">
+      <span class="logo-icon">🌿</span>
+      <span class="logo-text">Vivero La Vega</span>
+    </div>
+
+    <nav class="sidebar-nav">
+      <!-- Usamos routerLinkActive para que el botón se ilumine cuando estés en esa página -->
+      <button routerLink="/dashboard" routerLinkActive="active" class="nav-item">
+        <span class="material-icons">dashboard</span> Panel Principal
+      </button>
+      
+      <button routerLink="/ventas" routerLinkActive="active" class="nav-item btn-highlight">
+        <span class="material-icons">point_of_sale</span> Registrar Venta
+      </button>
+
+      <hr class="nav-divider">
+
+      <button routerLink="/productos" routerLinkActive="active" class="nav-item">
+        <span class="material-icons">inventory_2</span> Productos
+      </button>
+      
+      <button routerLink="/clientes" routerLinkActive="active" class="nav-item">
+        <span class="material-icons">group</span> Clientes
+      </button>
+      
+      <button routerLink="/usuarios" routerLinkActive="active" class="nav-item">
+        <span class="material-icons">key</span> Usuarios
+      </button>
+    </nav>
+
+    <footer class="sidebar-footer">
+      <div class="user-block">
+        <span class="material-icons">person</span>
+        <!-- Aquí podrías usar una señal o variable global para el nombre -->
+        <span class="username">{{ obtenerNombreUsuario() }}</span>
+      </div>
+      <button class="logout-btn" (click)="cerrarSesion()">
+        <span class="material-icons">logout</span> Salir
+      </button>
+    </footer>
+  </aside>
+  <!-- Fondo oscuro cuando el menú está abierto en móvil -->
+<div class="sidebar-overlay" *ngIf="isMenuOpen()" (click)="toggleMenu()"></div>
+  <!-- 2. Zona dinámica: Aquí Angular inyectará tus componentes -->
+  <main class="main-content">
+    <router-outlet></router-outlet>
+    @if (toast().show) {
   <div class="toast-notification">
     {{ toast().message }}
   </div>
 }
+  </main>
+</div>

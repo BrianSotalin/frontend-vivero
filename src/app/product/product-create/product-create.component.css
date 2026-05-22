@@ -1,9 +1,10 @@
  .form-wrapper { 
-    display: flex; 
-    justify-content: center; 
-    padding: 40px; 
-    background: #f1f8e9; 
-    min-height: 80vh; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 20px;
+  background-color: #f1f8e9;
+  min-height: calc(100vh - 100px);
 }
     .form-card { 
         background: white; 

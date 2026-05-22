@@ -1,0 +1,56 @@
+<div class="form-wrapper">
+  <div class="form-card">
+    <h2>
+      <span class="material-icons">edit</span>
+      Editar Credenciales
+    </h2>
+
+    
+    <form #miFormulario="ngForm" (ngSubmit)="actualizar(miFormulario)">
+      
+      <div class="input-group">
+        <label>Nombre de Usuario (No editable)</label>
+        <input 
+          type="text" 
+          [value]="usuarioEnEdicion.username" 
+          disabled 
+          class="disabled-input"
+        />
+      </div>
+      
+<div class="input-group">
+  <label for="password">Asignar Nueva Contraseña (Opcional)</label>
+  <input 
+    type="password" 
+    id="password"
+    [(ngModel)]="usuarioEnEdicion.password" 
+    name="password" 
+    minlength="6"  #passInput="ngModel"
+    placeholder="Dejar en blanco para no cambiarla"
+  />
+  <div class="error-container" *ngIf="passInput.errors?.['minlength'] && passInput.touched">
+    <small style="color: #d32f2f; font-weight: bold;">La nueva contraseña debe tener al menos 6 caracteres.</small>
+  </div>
+</div>
+
+      <div class="input-group">
+        <label for="rol">Cambiar Rol / Permisos</label>
+        <select id="rol" [(ngModel)]="usuarioEnEdicion.rol" name="rol" class="custom-select">
+          <option value="USER">Usuario Estándar (USER)</option>
+           <option value="EMPLOYEE">Empleado/Trabajador (EMPLOYEE)</option>
+          <option value="ADMIN">Administrador General (ADMIN)</option>
+        </select>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn-save" [disabled]="miFormulario.invalid">
+          Guardar Cambios
+        </button>
+        <button type="button" routerLink="/usuarios" class="btn-cancel">
+          Cancelar
+        </button>
+      </div>
+
+    </form>
+  </div>
+</div>

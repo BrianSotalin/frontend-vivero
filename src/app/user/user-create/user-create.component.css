@@ -1,0 +1,137 @@
+/* Contenedor principal centrado con fondo azul suave */
+.form-wrapper { 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 20px;
+  background-color: #f8ecfb;
+  min-height: calc(100vh - 100px);
+}
+
+/* Tarjeta del formulario con sombra limpia y línea superior azul */
+.form-card { 
+    background: white; 
+    padding: 30px; 
+    border-radius: 12px; 
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
+    width: 100%; 
+    max-width: 500px; 
+    border-top: 5px solid #9c27b0; 
+}
+
+/* Título centrado con icono */
+h2 { 
+    color: #9c27b0; 
+    margin-bottom: 25px; 
+    text-align: center; 
+    font-size: 1.6rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Bloques de cada campo */
+.input-group {
+    margin-bottom: 18px; 
+    display: flex;
+    flex-direction: column;
+}
+
+/* Etiquetas de los inputs */
+label { 
+    display: block; 
+    margin-bottom: 6px; 
+    color: #444; 
+    font-weight: bold; 
+    font-size: 0.9rem;
+}
+
+/* Inputs y Selects */
+input, .custom-select { 
+    width: 100%; 
+    padding: 11px; 
+    border: 1px solid #ddd; 
+    border-radius: 6px; 
+    box-sizing: border-box; 
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    outline: none;
+}
+
+/* Efecto focus */
+input:focus, .custom-select:focus {
+    border-color: #9c27b0;
+    box-shadow: 0 0 5px rgba(33, 150, 243, 0.2);
+}
+
+/* Estilos de validación de Angular */
+input.ng-invalid.ng-touched {
+    border-color: #d32f2f;
+    background-color: #fff8f8;
+}
+
+/* Texto de error */
+.error-text {
+    color: #d32f2f;
+    font-size: 12px;
+    display: block;
+    margin-top: 5px;
+    font-weight: bold;
+}
+
+/* Contenedor de botones en columna */
+.form-actions { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 12px; 
+    margin-top: 25px; 
+}
+
+/* Botón Guardar */
+.btn-save { 
+    background: #9c27b0; 
+    color: white; 
+    border: none; 
+    padding: 13px; 
+    border-radius: 8px; 
+    cursor: pointer; 
+    font-weight: bold; 
+    font-size: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    transition: background 0.2s ease;
+}
+
+.btn-save:hover:not([disabled]) {
+    background: #9c27b0;
+}
+
+/* Estado deshabilitado */
+.btn-save:disabled {
+    background: #bea6c4;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+/* Botón Cancelar */
+.btn-cancel { 
+    background: #eee; 
+    color: #555; 
+    border: none; 
+    padding: 13px; 
+    border-radius: 8px; 
+    cursor: pointer; 
+    font-weight: bold;
+    font-size: 1rem;
+    text-align: center;
+    text-decoration: none;
+    transition: background 0.2s ease;
+}
+
+.btn-cancel:hover { 
+    background: #e0e0e0;
+    color: #333;
+}

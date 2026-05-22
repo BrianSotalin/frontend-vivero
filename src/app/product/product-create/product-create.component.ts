@@ -8,8 +8,8 @@ import { ProductService } from '../../services/product.service';
   selector: 'app-product-form',
   standalone: true,
   imports: [CommonModule, FormsModule, RouterLink],
-  templateUrl: './product-form.component.html',
-  styleUrls: ['./product-form.component.css']
+  templateUrl: './product-create.component.html',
+  styleUrls: ['./product-create.component.css']
 })
 export class ProductFormComponent {
   private productService = inject(ProductService);
@@ -30,7 +30,7 @@ export class ProductFormComponent {
     }
     this.productService.createProducto(this.nuevoProducto).subscribe({
       next: () => {
-        alert('Producto creado con éxito! 🌿');
+        alert('Producto creado con éxito!');
         this.router.navigate(['/productos']);
       },
      error: (err) => {

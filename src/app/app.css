@@ -1,3 +1,111 @@
+/* Layout Principal */
+.app-layout {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f4f7f6;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 260px;
+  background-color: #ffffff;
+  border-right: 1px solid #e0e0e0;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  height: 100vh;
+}
+
+.sidebar-header {
+  padding: 25px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #2e7d32;
+}
+
+/* Navegación */
+.sidebar-nav {
+  flex: 1;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 15px;
+  border: none;
+  background: none;
+  color: #555;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.nav-item:hover {
+  background-color: #f0f4f1;
+  color: #2e7d32;
+}
+
+.nav-item.active {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+/* Botón Destacado (Ventas) */
+.btn-highlight {
+  background-color: #2e7d32 !important;
+  color: white !important;
+  margin: 10px 0;
+  box-shadow: 0 4px 10px rgba(46, 125, 50, 0.2);
+}
+
+.nav-divider {
+  border: 0;
+  border-top: 1px solid #eee;
+  margin: 15px 0;
+}
+
+/* Área de Contenido */
+.main-content {
+  margin-left: 260px; /* Igual al ancho del sidebar */
+  flex: 1;
+  padding: 20px;
+}
+
+/* Footer del Sidebar */
+.sidebar-footer {
+  padding: 20px;
+  border-top: 1px solid #eee;
+}
+
+.user-block {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.logout-btn {
+  background: none;
+  border: none;
+  color: #d32f2f;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-weight: bold;
+}
+
 /* src/app/app.css */
 .toast-notification {
   position: fixed;
@@ -13,3 +121,52 @@
   font-weight: bold;
   display: block !important;
 }
+/* --- BOTÓN MÓVIL --- */
+.mobile-menu-btn {
+  display: none; /* Escondido en PC */
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  z-index: 1100;
+  background: #2e7d32;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+/* --- ESTILOS MÓVIL (Menos de 768px) --- */
+@media (max-width: 768px) {
+  .mobile-menu-btn {
+    display: flex; /* Aparece en móviles */
+  }
+
+  .sidebar {
+    left: -260px; /* Escondido por defecto */
+    transition: 0.3s ease all;
+    z-index: 1200;
+  }
+
+  .sidebar.open {
+    left: 0; /* Entra desde la izquierda */
+  }
+
+  .main-content {
+    margin-left: 0 !important;
+    padding-top: 70px; /* Deja espacio para el botón de arriba */
+  }
+
+  /* Capa oscura detrás del menú */
+  .sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,0.5);
+    z-index: 1050;
+  }
+}
+

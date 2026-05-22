@@ -76,7 +76,7 @@ next: (data) => {
   // Enviamos al PATCH únicamente el trozo modificado
   this.productService.updateProducto(this.productoId, camposModificados).subscribe({
     next: () => {
-      alert('Producto actualizado con éxito! 🌿');
+      alert('Producto actualizado con éxito!');
       this.router.navigate(['/productos']);
     },
     error: (err) => {
