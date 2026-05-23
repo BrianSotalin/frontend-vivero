@@ -1,6 +1,6 @@
-import { Component, signal, inject, afterNextRender } from '@angular/core';
+import { Component, signal, inject, afterNextRender, PLATFORM_ID } from '@angular/core';
 import { RouterOutlet, RouterLink, RouterLinkActive, Router, NavigationEnd } from '@angular/router';
-import { CommonModule } from '@angular/common';
+import { CommonModule , isPlatformBrowser} from '@angular/common';
 import { ToastService } from './services/toast.service';
 import { AuthService } from './services/auth.service';
 import { filter } from 'rxjs';
@@ -16,6 +16,7 @@ export class App {
   private toastService = inject(ToastService);
   private authService = inject(AuthService);
   private router = inject(Router);
+  private platformId = inject(PLATFORM_ID);
 
   username = signal<string>('Usuario');
   toast = signal<{show: boolean, message: string}>({ show: false, message: '' });
@@ -62,9 +63,10 @@ verificarSesion() {
 }
 
   obtenerNombreUsuario(): string {
-    // Si lo guardaste en el login, lo sacas de aquí. 
-    // Si no, podrías sacarlo del payload del JWT decodificado.
-    return localStorage.getItem('username') || 'Usuario';
+ if (isPlatformBrowser(this.platformId)) {
+      return localStorage.getItem('username') || 'Usuario';
+    }
+    return 'Usuario'; // Valor por defecto durante el renderizado en servidor
   }
   cerrarSesion() {
     this.authService.logout();
