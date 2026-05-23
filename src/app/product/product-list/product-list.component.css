@@ -2,15 +2,13 @@
       padding: 20px; 
       font-family: sans-serif;
     }
-    .header  {
-      display: flex; 
-      justify-content: space-between; 
-      align-items: center;
-    }
     h2 {
       color: #2e7d32;
-       margin-bottom: 20px;
+      margin-bottom: 20px;
       font-size: 28px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
     /* Cabecera: Buscador y Botón Nuevo */
 .actions-header {

@@ -47,20 +47,25 @@ toggleMenu() {
 
 
 verificarSesion() {
-  const token = localStorage.getItem('token');
-  const name = localStorage.getItem('username');
+  // 1. Obtener datos (solo si estamos en el navegador)
+  const token = typeof localStorage !== 'undefined' ? localStorage.getItem('token') : null;
+  const name = typeof localStorage !== 'undefined' ? localStorage.getItem('username') : null;
   
-  // Lista de rutas que NUNCA deben mostrar el sidebar
-  const rutasSinSidebar = ['/login', '/unauthorized'];
-  const rutaActual = this.router.url;
+  // 2. Obtener la ruta limpia (sin parámetros de búsqueda como ?id=1)
+  const rutaActual = this.router.url.split('?')[0];
 
-  // Se muestra el sidebar SOLO si hay token Y la ruta no está en la lista negra
-  const esRutaExcluida = rutasSinSidebar.some(ruta => rutaActual.includes(ruta));
+  // 3. Definir rutas prohibidas de forma exacta
+  const rutasSinSidebar = ['/login', '/unauthorized'];
   
+  // 4. Verificación estricta
+  const esRutaExcluida = rutasSinSidebar.includes(rutaActual);
+  
+  // 5. El sidebar solo vive si hay token Y no es una ruta excluida
   this.isLoggedIn.set(!!token && !esRutaExcluida); 
 
   if (name) this.username.set(name);
 }
+
 
   obtenerNombreUsuario(): string {
  if (isPlatformBrowser(this.platformId)) {
