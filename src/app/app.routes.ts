@@ -12,6 +12,7 @@ import { ClienteEditComponent } from './client/client-edit/client-edit.component
 import { UsuarioListComponent } from './user/user-list/user-list.component';
 import { UsuarioCreateComponent } from './user/user-create/user-create.component';
 import { UsuarioEditComponent } from './user/user-edit/user-edit.component';
+import { SalesListComponent } from './sales/sales-list/sales-list.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent},
@@ -31,6 +32,10 @@ export const routes: Routes = [
   { path: 'usuarios', component: UsuarioListComponent, canActivate: [authGuard] },
   { path: 'usuarios/nuevo', component: UsuarioCreateComponent, canActivate: [authGuard] },
   { path: 'usuarios/editar/:id', component: UsuarioEditComponent, canActivate: [authGuard] },
+  /*Rutas protegidas para ventas, solo accesibles si el usuario está autenticado*/
+  { path: 'ventas', component: SalesListComponent, canActivate: [authGuard] },
+  //{ path: 'ventas/nueva', component: SalesCreateComponent, canActivate: [authGuard] },
+  //{ path: 'ventas/editar/:id', component: SalesEditComponent, canActivate: [authGuard] },
   /* Ruta para mostrar error de acceso no autorizado */
   { path: 'unauthorized', component: UnauthorizedComponent },
   { path: '',redirectTo: 'login', pathMatch: 'full' },
