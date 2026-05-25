@@ -9,7 +9,11 @@ export class SalesService {
   private http = inject(HttpClient);
   private apiUrl = 'http://localhost:8080/api/ventas';
 
-  getVentas(): Observable<any[]> {
+  getSales(): Observable<any[]> {
     return this.http.get<any[]>(this.apiUrl);
+  }
+  // Obtener una venta específica con sus detalles por ID
+  getSalesById(id: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/${id}`);
   }
 }

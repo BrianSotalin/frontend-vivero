@@ -26,7 +26,7 @@ export class SalesListComponent implements OnInit {
   }
 
   cargarVentas() {
-    this.salesService.getVentas().subscribe({
+    this.salesService.getSales().subscribe({
       next: (data) => this.sales.set(data),
       error: (err) => console.error('Error cargando ventas:', err)
     });
