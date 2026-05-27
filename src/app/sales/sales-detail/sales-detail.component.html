@@ -65,8 +65,8 @@
       <tbody>
         <tr *ngFor="let item of venta()?.detalles">
           <td>
-            <div class="product-name">{{ item.producto.nombre }}</div>
-            <small class="product-code">Código: #{{ item.producto.id }}</small>
+            <div class="product-name">{{ item.producto.producto }}</div>
+      
           </td>
           <td class="text-center text-bold quantity-cell">
             {{ item.cantidad }}
@@ -87,14 +87,34 @@
       </tbody>
     </table>
 
-    <div class="total-section">
-      <div class="total-box">
-        <div class="total-row">
-          <span class="total-label">Total Neto:</span>
-          <span class="total-amount">${{ venta()?.total | number:'1.2-2' }}</span>
-        </div>
-      </div>
+<div class="total-section">
+  <div class="total-box">
+    @if (venta()?.abono > 0) {
+    <!-- Fila de Abono -->
+    <div class="total-row">
+      <span class="total-label">Abono:</span>
+      <span class="abono-amount">${{ venta()?.abono | number:'1.2-2' }}</span>
     </div>
+  }
+    <!-- Fila de Total Neto -->
+    <div class="total-row">
+      <span class="total-label">Total Neto:</span>
+      <span class="total-amount">${{ venta()?.total | number:'1.2-2' }}</span>
+    </div>
+
+    @if (venta()?.abono > 0 || venta()?.estado === 1) {
+    <!-- Separador visual opcional -->
+    <hr class="total-divider">
+
+    <!-- Fila del Saldo Restante -->
+    <div class="total-row pendiente">
+      <span class="total-label">Saldo Pendiente:</span>
+      <span class="pendiente-amount">${{ saldoPendiente() | number:'1.2-2' }}</span>
+    </div>
+  }
+  </div>
+</div>
+
 
   </div>
 </div>

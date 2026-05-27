@@ -223,20 +223,46 @@
   border: 1px solid #e9ecef;
 }
 
+/* Ahora cada par de datos ocupa una línea completa */
 .total-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 10px; /* Espacio entre filas */
+}
+
+.total-row:last-child {
+  margin-bottom: 0; /* Quita el margen a la última fila */
 }
 
 .total-label {
-  font-size: 1.1rem;
+  font-size: 1rem;
   font-weight: 500;
   color: #495057;
 }
 
-.total-amount {
-  font-size: 1.5rem;
+/* Estilos de los montos alineados a la derecha */
+.abono-amount {
+  font-size: 1.1rem;
   font-weight: bold;
-  color: #1b5e20;
+
+}
+
+.total-amount {
+  font-size: 1.2rem;
+  font-weight: bold;
+
+}
+
+.pendiente-amount {
+  font-size: 1.3rem;
+  font-weight: bold;
+  color:#c62828;
+}
+
+/* Línea divisoria interna */
+.total-divider {
+  border: 0;
+  border-top: 1px solid #dee2e6;
+  margin: 10px 0;
 }

@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal, ChangeDetectorRef } from '@angular/core';
+import { Component, inject, OnInit, signal, computed, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { SalesService } from '../../services/sales.service';
@@ -19,6 +19,16 @@ export class SalesDetailComponent implements OnInit {
   // Signal que almacena el objeto Venta completo (con su cliente y lista de detalles)
   venta = signal<any>(null);
   
+    // Resta automáticamente el abono del total protegiendo el código de valores nulos
+  saldoPendiente = computed(() => {
+    const datosVenta = this.venta();
+    if (!datosVenta) return 0;
+    
+    const total = datosVenta.total || 0;
+    const abono = datosVenta.abono || 0;
+    return total - abono;
+  });
+
   // Guardamos el ID por si se necesita en alguna otra parte de la lógica
   ventaId: number | null = null;
 
@@ -55,12 +65,12 @@ export class SalesDetailComponent implements OnInit {
 obtenerDetalleVenta(id: number) {
     // Ahora coincide perfectamente con getSalesById
     this.salesService.getSalesById(id).subscribe({
-      next: (data: any) => { // 👈 Agregado ': any'
+      next: (data: any) => { // Agregado ': any'
         console.log('Datos de la venta recuperados con éxito:', data);
         this.venta.set(data);
         this.cdr.detectChanges();
       },
-      error: (err: any) => { // 👈 Agregado ': any'
+      error: (err: any) => { //  Agregado ': any'
         console.error('Error al intentar cargar el detalle de la venta:', err);
         alert('Ocurrió un error al cargar los datos.');
         this.router.navigate(['/ventas']);
