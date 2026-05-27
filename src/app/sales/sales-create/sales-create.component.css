@@ -1,0 +1,353 @@
+/* --- Estilos Generales y Utilidades --- */
+.table-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.flex-1 {
+  flex: 1;
+}
+
+.font-bold {
+  font-weight: bold;
+}
+
+.color-dark {
+  color: #1e293b;
+}
+
+/* --- Encabezado --- */
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+  border-bottom: 2px solid #e2e8f0;
+  padding-bottom: 12px;
+}
+
+.main-title {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #1e293b;
+}
+
+.icon-success {
+  color: #2e7d32;
+  font-size: 28px;
+}
+.btn-secondary {
+  background: #ef4444;       /* Rojo moderno/vibrante */
+  border: 1px solid #dc2626; /* Borde un poco más oscuro para dar profundidad */
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  color: #ffffff;            /* Letras blancas */
+  font-weight: 500;
+  transition: background 0.2s;
+}
+
+/* Efecto al pasar el mouse por encima */
+.btn-secondary:hover {
+  background: #dc2626;       /* Rojo más oscuro al hacer hover */
+}
+
+
+/* --- Grid Principal --- */
+.main-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 25px;
+}
+
+.forms-column {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* --- Tarjetas de Formularios --- */
+.card-form {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.section-title {
+  margin-top: 0;
+  color: #334155;
+  font-size: 1.05rem;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.icon-muted {
+  color: #64748b;
+  font-size: 20px;
+}
+
+/* --- Elementos de Formulario --- */
+.form-select, .form-input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #cbd5e1;
+  background-color: #fff;
+  font-size: 0.95rem;
+  box-sizing: border-box;
+}
+
+.form-input {
+  padding: 9px;
+}
+
+.input-label {
+  display: block;
+  font-size: 0.85rem;
+  color: #64748b;
+  margin-bottom: 6px;
+}
+
+.payment-status {
+  font-weight: 500;
+  color: #1e293b;
+}
+
+/* --- Opciones del Selector de Pago --- */
+.status-paid { color: #2e7d32; font-weight: bold; }
+.status-debt { color: #ef4444; font-weight: bold; }
+.status-partial { color: #f59e0b; font-weight: bold; }
+
+/* --- Caja de Alerta (Abono) --- */
+.alert-box {
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  padding: 12px;
+  border-radius: 6px;
+  margin-top: 5px;
+}
+
+.alert-label {
+  display: block;
+  font-size: 0.85rem;
+  color: #b45309;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+.alert-input {
+  width: 100%;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #fcd34d;
+  box-sizing: border-box;
+  font-weight: bold;
+  color: #1e293b;
+}
+
+.alert-text {
+  color: #b45309;
+  font-size: 0.78rem;
+  display: block;
+  margin-top: 4px;
+}
+
+/* --- Sección Productos --- */
+.product-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.product-row {
+  display: flex;
+  gap: 15px;
+  align-items: flex-end;
+}
+/* --- Botón Agregar Producto --- */
+.btn-primary {
+  background: #1e293b;        /* Color pizarra oscuro original */
+  color: white;               /* Letras blancas */
+  border: none;
+  padding: 11px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.2s; /* Transición suave para el efecto hover */
+  box-sizing: border-box;
+}
+
+/* Efecto al pasar el mouse por encima (Reemplaza el 'onmouseover' antiguo) */
+.btn-primary:hover:not(:disabled) {
+  background: #334155;        /* Color un poco más claro al hacer hover */
+}
+
+/* Estado deshabilitado (cuando no hay un producto seleccionado) */
+.btn-primary:disabled {
+  background: #cbd5e1;
+  color: #94a3b8;
+  cursor: not-allowed;
+}
+
+/* --- Contenedor Derecho Principal --- */
+.summary-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 25px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* --- Título de Sección --- */
+.summary-title {
+  margin-top: 0;
+  color: #1e293b;
+  font-size: 1.1rem;
+  margin-bottom: 15px;
+  border-bottom: 1px dashed #e2e8f0;
+  padding-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.icon-success {
+  color: #2e7d32;
+}
+
+/* --- Lista de Productos --- */
+.cart-list {
+  max-height: 280px;
+  overflow-y: auto;
+  margin-bottom: 20px;
+  padding-right: 5px;
+}
+
+.cart-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #f1f5f9;
+  gap: 10px;
+}
+
+.flex-1 {
+  flex: 1;
+}
+
+.item-name {
+  font-weight: 500;
+  color: #1e293b;
+  display: block;
+}
+
+.item-details {
+  color: #64748b;
+}
+
+/* --- Acciones de Fila --- */
+.item-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.item-total {
+  font-weight: bold;
+  color: #0f172a;
+}
+
+.btn-delete {
+  background: none;
+  border: none;
+  color: #ef4444;
+  cursor: pointer;
+  padding: 2px;
+}
+
+.btn-delete .material-icons {
+  font-size: 18px;
+}
+
+/* --- Estado de Carrito Vacío --- */
+.empty-cart {
+  text-align: center;
+  color: #94a3b8;
+  padding: 40px 0;
+}
+
+.empty-cart-icon {
+  font-size: 40px;
+  color: #cbd5e1;
+  display: block;
+  margin-bottom: 6px;
+}
+
+/* --- Bloque de Cierre y Liquidación --- */
+.checkout-section {
+  border-top: 2px solid #f1f5f9;
+  padding-top: 15px;
+}
+
+.total-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.total-label {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #475569;
+}
+
+.total-amount {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: #16a34a;
+}
+
+/* --- Botón Procesar Venta --- */
+.btn-submit {
+  width: 100%;
+  background: #2e7d32;
+  color: white;
+  border: none;
+  padding: 14px;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 2px 4px rgba(22, 163, 74, 0.2);
+}
+
+.btn-submit:hover:not(:disabled) {
+  background: #236127;
+}
+
+.btn-submit:disabled {
+  background: #cbd5e1;
+  color: #94a3b8;
+  cursor: not-allowed;
+  box-shadow: none;
+}

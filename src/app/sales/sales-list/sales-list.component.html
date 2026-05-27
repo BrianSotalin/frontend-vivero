@@ -37,10 +37,9 @@
           <td>{{ venta.cliente ? venta.cliente.nombre : 'Consumidor Final' }}</td>
           <td><b>${{ venta.total | number:'1.2-2' }}</b></td>
           <td>
-            <span class="badge-status" 
-                  [ngClass]="venta.estado === 'PAGADA' ? 'status-paid' : 'status-pending'">
-              {{ venta.estado }}
-            </span>
+<span class="badge-status" [ngClass]="clasesEstado[venta.estado]">
+  {{ textosEstado[venta.estado] }}
+</span>
           </td>
           <td>
             <button class="btn-view-row" [routerLink]="['/ventas/', venta.id]">

@@ -22,6 +22,20 @@ export class SalesDetailComponent implements OnInit {
   // Guardamos el ID por si se necesita en alguna otra parte de la lógica
   ventaId: number | null = null;
 
+    // 1. Diccionario para los textos que verá el usuario
+  textosEstado: { [key: number]: string } = {
+    0: 'PAGADO',
+    1: 'DEUDA',
+    2: 'ABONADO'
+  };
+
+  // 2. Diccionario para las clases CSS de los badges
+  clasesEstado: { [key: number]: string } = {
+    0: 'status-paid',
+    1: 'status-debt',    // Puedes crear una clase intermedia para la deuda
+    2: 'status-pending' // O 'status-abonado'
+  };
+
   ngOnInit() {
     // 1. Capturamos el ID de la venta desde el parámetro de la ruta activa
     this.ventaId = Number(this.route.snapshot.paramMap.get('id'));

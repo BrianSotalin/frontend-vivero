@@ -1,0 +1,140 @@
+<div class="table-container">
+  
+  <!-- Encabezado principal -->
+  <div class="header-container">
+    <h2 class="main-title">
+      <span class="material-icons icon-success">add_shopping_cart</span>
+      Punto de Venta - Registrar Compra
+    </h2>
+    <button routerLink="/ventas" class="btn-secondary">
+      Cancelar
+    </button>
+  </div>
+
+  <!-- Contenedor de dos columnas -->
+  <div class="main-grid">
+    
+    <!-- Columna Izquierda: Formularios -->
+    <div class="forms-column">
+  
+      <!-- Bloque 1: Cliente y Pago -->
+      <div class="card-form">
+        <div>
+          <h3 class="section-title">
+            <span class="material-icons icon-muted">person</span> Selección de Cliente
+          </h3>
+          <select [(ngModel)]="clienteSeleccionadoId" class="form-select">
+            <option [ngValue]="null">Consumidor Final</option>
+            <option *ngFor="let c of clientes()" [value]="c.id">{{ c.nombre }}</option>
+          </select>
+        </div>
+
+        <div>
+          <h3 class="section-title">
+            <span class="material-icons icon-muted">credit_score</span> Estado del Pago
+          </h3>
+          <select [(ngModel)]="estadoPagoSeleccionado" class="form-select payment-status">
+            <option [ngValue]="0" class="status-paid">PAGADA (Monto completo recibido)</option>
+            <option [ngValue]="1" class="status-debt">DEUDA (Por cobrar / Crédito)</option>
+            <option [ngValue]="2" class="status-partial">ABONADO (Pago parcial)</option>
+          </select>
+        </div>
+
+        <!-- Alerta de abono parcial -->
+        <div *ngIf="estadoPagoSeleccionado === 2" class="alert-box">
+          <label class="alert-label">
+            ¿Cuánto dinero deja de adelanto? ($):
+          </label>
+          <input 
+            type="number" 
+            [(ngModel)]="montoAbonado" 
+            min="0" 
+            [max]="totalVenta()" 
+            step="0.01" 
+            class="alert-input" />
+          <small class="alert-text">
+            Restante por pagar: ${{ (totalVenta() - montoAbonado) | number:'1.2-2' }}
+          </small>
+        </div>
+      </div> 
+
+      <!-- Bloque 2: Escoger Productos -->
+      <div class="card-form">
+        <h3 class="section-title">
+          <span class="material-icons icon-muted">local_florist</span> Escoger Productos
+        </h3>
+        
+        <div class="product-inputs">
+          <div>
+            <label class="input-label">Selecciona la planta o insumo:</label>
+            <select [(ngModel)]="productoSeleccionado" (ngModelChange)="onProductoChange($event)" class="form-select">
+              <option [ngValue]="null" disabled selected>-- Elige un artículo --</option>
+              <option *ngFor="let p of productos()" [ngValue]="p">
+                {{ p.producto }} 
+              </option>
+            </select>
+          </div>
+
+          <div class="product-row">
+            <div class="flex-1">
+              <label class="input-label">Cantidad:</label>
+              <input type="number" [(ngModel)]="cantidadAgregar" min="1" class="form-input" />
+            </div>
+            <div>
+              <label class="input-label">Precio ($):</label>
+              <input type="number" [(ngModel)]="precioModificable" [disabled]="!productoSeleccionado" step="0.01" class="form-input font-bold color-dark" />
+            </div>
+            <button (click)="agregarAlCarrito()" [disabled]="!productoSeleccionado" class="btn-primary">
+              Agregar
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+<div class="summary-card">
+  <div>
+    <h3 class="summary-title">
+      <span class="material-icons icon-success">shopping_bag</span> Resumen del Pedido
+    </h3>
+
+    <!-- Lista de artículos en el carrito -->
+    <div class="cart-list">
+      <div *ngFor="let item of carrito(); let i = index" class="cart-item">
+        <div class="flex-1">
+          <span class="item-name">{{ item.producto.nombre }}</span>
+          <small class="item-details">{{ item.cantidad }} x ${{ item.precio | number:'1.2-2' }}</small>
+        </div>
+        <div class="item-actions">
+          <span class="item-total">${{ (item.cantidad * item.precio) | number:'1.2-2' }}</span>
+          <button (click)="eliminarDelCarrito(i)" class="btn-delete" title="Eliminar artículo">
+            <span class="material-icons">delete_outline</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Estado de carrito vacío -->
+      <div *ngIf="carrito().length === 0" class="empty-cart">
+        <span class="material-icons empty-cart-icon">shopping_cart</span>
+        El carrito está vacío.
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer con Total y Botón de Cobro -->
+  <div class="checkout-section">
+    <div class="total-row">
+      <span class="total-label">Total a Cobrar:</span>
+      <span class="total-amount">${{ totalVenta() | number:'1.2-2' }}</span>
+    </div>
+
+    <button (click)="guardarVenta()" [disabled]="carrito().length === 0" class="btn-submit">
+      <span class="material-icons">point_of_sale</span>
+      Procesar y Guardar Venta
+    </button>
+  </div>
+</div>
+
+
+  </div>
+</div>

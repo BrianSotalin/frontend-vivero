@@ -16,4 +16,7 @@ export class SalesService {
   getSalesById(id: number): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/${id}`);
   }
+  createSale(saleData: any): Observable<any> {
+    return this.http.post<any>(this.apiUrl, saleData);
+  }
 }

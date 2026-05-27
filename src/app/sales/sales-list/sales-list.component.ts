@@ -21,6 +21,20 @@ export class SalesListComponent implements OnInit {
   paginaActual = signal<number>(1);
   ventasPorPagina = signal<number>(5);
 
+  // 1. Diccionario para los textos que verá el usuario
+  textosEstado: { [key: number]: string } = {
+    0: 'PAGADO',
+    1: 'DEUDA',
+    2: 'ABONADO'
+  };
+
+  // 2. Diccionario para las clases CSS de los badges
+  clasesEstado: { [key: number]: string } = {
+    0: 'status-paid',
+    1: 'status-debt',    // Puedes crear una clase intermedia para la deuda
+    2: 'status-pending' // O 'status-abonado'
+  };
+
   ngOnInit() {
     this.cargarVentas();
   }
