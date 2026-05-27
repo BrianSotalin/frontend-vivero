@@ -19,4 +19,8 @@ export class SalesService {
   createSale(saleData: any): Observable<any> {
     return this.http.post<any>(this.apiUrl, saleData);
   }
+  // Método para la eliminación
+  deleteSale(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
 }

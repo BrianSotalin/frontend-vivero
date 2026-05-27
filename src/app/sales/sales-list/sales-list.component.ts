@@ -20,6 +20,8 @@ export class SalesListComponent implements OnInit {
   // Paginación
   paginaActual = signal<number>(1);
   ventasPorPagina = signal<number>(5);
+  // Guardamos temporalmente la venta que se planea eliminar
+  ventaSeleccionada = signal<any>(null);
 
   // 1. Diccionario para los textos que verá el usuario
   textosEstado: { [key: number]: string } = {
@@ -79,5 +81,34 @@ export class SalesListComponent implements OnInit {
     // Al cambiar el tamaño (5, 10, 20), reiniciamos a la página 1 para evitar desbordamientos
   cambiarTamano() {
     this.paginaActual.set(1);
+  }
+
+  // Abre el modal guardando la venta seleccionada
+  abrirConfirmacion(venta: any, modal: HTMLDialogElement) {
+    this.ventaSeleccionada.set(venta);
+    modal.showModal(); // Método nativo del navegador para mostrar modales
+  }
+
+  // Cierra el modal y limpia la selección
+  cerrarModal(modal: HTMLDialogElement) {
+    modal.close();
+    this.ventaSeleccionada.set(null);
+  }
+
+ confirmarEliminar(modal: HTMLDialogElement) {
+    const venta = this.ventaSeleccionada();
+    if (venta) {
+      this.salesService.deleteSale(venta.id).subscribe({
+        next: () => {
+          this.cerrarModal(modal);
+          this.cargarVentas(); // Recarga la tabla automáticamente
+           alert('Venta eliminada con éxito! ');
+        },
+        error: (err) => {
+          console.error('Error al eliminar la venta', err);
+          alert(`No se pudo eliminar la venta : ${err.error?.message || err.message}`);
+        }
+      });
+    }
   }
 }

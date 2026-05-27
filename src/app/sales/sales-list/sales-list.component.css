@@ -101,6 +101,10 @@ tr:hover {
   background: #ffebee;
   color: #c62828;
 }
+.status-pending {
+  background: #fff3e0;
+  color: #b08908;
+}
 
 /* Botones de acción circulares */
 .btn-view-row {
@@ -124,6 +128,130 @@ tr:hover {
   font-size: 24px;
 }
 
+/* Estilo para el botón */
+.btn-delete-row {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s;
+}
+
+.btn-delete-row:hover {
+  background-color: #ffebee; /* Fondo rosa/rojo suave al pasar el mouse */
+}
+/* Estilo para el icono de la basura */
+.icon-rojo {
+  color: #e53935; /* El rojo exacto que querías */
+  font-size: 24px; /* Controla el tamaño fácilmente aquí */
+}
+
+/* Estilos del Modal Nativo <dialog> */
+.confirm-modal {
+  border: none;
+  border-radius: 12px;
+  padding: 0;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  max-width: 400px;
+}
+
+/* Estilos del Modal Nativo <dialog> */
+.confirm-modal {
+  border: none;
+  border-radius: 12px;
+  padding: 0;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  max-width: 400px;
+}
+/* Estilo para el botón de editar */
+
+.btn-edit-row {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  transition: background-color 0.2s;
+}
+
+.btn-edit-row:hover {
+  background-color: #e3f2fd; /* Azul suave */
+}
+
+/* Fondo oscurecido detrás del modal */
+.confirm-modal::backdrop {
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(2px);
+}
+
+.modal-content {
+  padding: 30px;
+  text-align: center;
+  font-family: sans-serif;
+}
+
+.alert {
+  font-size: 45px;
+  display: block;
+  margin-bottom: 10px;
+  color: #e53935;
+}
+
+.modal-content h2 {
+  color: #333;
+  margin: 0 0 10px 0;
+}
+
+.modal-content p {
+  color: #666;
+  font-size: 15px;
+  line-height: 1.5;
+  margin-bottom: 25px;
+}
+
+/* Botones del Modal */
+.modal-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.modal-actions button {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s;
+  flex: 1;
+}
+
+.btn-confirm-delete {
+  background-color: #d32f2f;
+  color: white;
+}
+
+.btn-confirm-delete:hover {
+  background-color: #b71c1c;
+}
+
+.btn-cancel-delete {
+  background-color: #f5f5f5;
+  color: #555;
+}
+
+.btn-cancel-delete:hover {
+  background-color: #e0e0e0;
+}
 /* Contenedor general de la paginación */
 .pagination-container {
   display: flex;

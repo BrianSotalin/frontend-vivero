@@ -45,6 +45,9 @@
             <button class="btn-view-row" [routerLink]="['/ventas/', venta.id]">
               <span class="material-icons icon-gray">visibility</span>
             </button>
+              <button class="btn-delete-row" (click)="abrirConfirmacion(venta, miModal)">
+              <span class="material-icons icon-rojo">delete</span>
+            </button>
           </td>
         </tr>
         <tr *ngIf="ventasPaginadas().length === 0">
@@ -81,3 +84,17 @@
   </div>
 
 </div>
+
+    <!-- MODAL NATIVO DE CONFIRMACIÓN -->
+<dialog #miModal class="confirm-modal">
+  <div class="modal-content">
+    <span class="material-icons alert">warning</span>
+    <h2>¿Eliminar Venta?</h2>
+    <p>¿Estás seguro de que deseas quitar <strong>{{ ventaSeleccionada()?.codigo }}</strong> del historial? Esta acción no se puede deshacer.</p>
+
+    <div class="modal-actions">
+      <button class="btn-confirm-delete" (click)="confirmarEliminar(miModal)">Sí, Eliminar</button>
+      <button class="btn-cancel-delete" (click)="cerrarModal(miModal)">Cancelar</button>
+    </div>
+  </div>
+</dialog>
