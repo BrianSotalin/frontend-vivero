@@ -213,6 +213,9 @@
 
 .modal-content {
   padding: 30px;
+  display: flex;          /* ACTIVA EL CONTENEDOR FLEX */
+  flex-direction: column; /* ALINEA LOS ELEMENTOS EN VERTICAL */
+  align-items: center;    /* CENTRA EL H2 Y EL ICONO HORIZONTALMENTE */
   text-align: center;
   font-family: sans-serif;
 }
@@ -225,6 +228,7 @@
 }
 
 .modal-content h2 {
+  text-align: center;
   color: #333;
   margin: 0 0 10px 0;
 }
@@ -241,6 +245,7 @@
   display: flex;
   gap: 12px;
   justify-content: center;
+  width: 100%;            /* OBLIGA A LOS BOTONES A USAR TODO EL ANCHO DISPONIBLE */
 }
 
 .modal-actions button {

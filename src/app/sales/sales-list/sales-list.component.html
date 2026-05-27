@@ -89,8 +89,8 @@
 <dialog #miModal class="confirm-modal">
   <div class="modal-content">
     <span class="material-icons alert">warning</span>
-    <h2>¿Eliminar Venta?</h2>
-    <p>¿Estás seguro de que deseas quitar <strong>{{ ventaSeleccionada()?.codigo }}</strong> del historial? Esta acción no se puede deshacer.</p>
+    <h2>Eliminar #{{ ventaSeleccionada()?.codigo }}</h2>
+    <p>¿Estás seguro de que deseas quitar venta <strong>#{{ ventaSeleccionada()?.codigo }}</strong> del historial? <br> Esta acción no se puede deshacer.</p>
 
     <div class="modal-actions">
       <button class="btn-confirm-delete" (click)="confirmarEliminar(miModal)">Sí, Eliminar</button>

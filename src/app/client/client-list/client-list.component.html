@@ -79,9 +79,10 @@
 <dialog #modalEliminar class="confirm-modal">
   <div class="modal-content">
    <span class="material-icons alert">warning</span>
-    <p>¿Seguro que deseas eliminar al cliente <b>{{ clienteSeleccionado()?.nombre }}</b>?</p>
+    <h2>Eliminar '{{ clienteSeleccionado()?.nombre }}'</h2>
+    <p>¿Estás seguro de que deseas quitar el cliente <strong>{{ clienteSeleccionado()?.nombre }}</strong> del inventario? <br> Esta acción no se puede deshacer.</p>
     <div class="modal-actions">
-      <button (click)="confirmarEliminar(modalEliminar)" class="btn-confirm-delete">Sí, eliminar</button>
+      <button (click)="confirmarEliminar(modalEliminar)" class="btn-confirm-delete">Sí, Eliminar</button>
       <button (click)="cerrarModal(modalEliminar)" class="btn-cancel-delete">Cancelar</button>
     </div>
   </div>
