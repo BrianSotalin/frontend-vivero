@@ -6,8 +6,9 @@ RUN npm install
 COPY . .
 RUN npm run build -- --configuration production
 
-# Etapa 2: Servir con Nginx
-FROM nginx:alpine
-COPY --from=build /app/dist/TU_APP/browser /usr/share/nginx/html
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-EXPOSE 80
+# Etapa 2: Correr con Node
+FROM node:20-alpine
+WORKDIR /app
+COPY --from=build /app/dist/vivero-frontend ./dist/vivero-frontend
+EXPOSE 4000
+CMD ["node", "dist/vivero-frontend/server/server.mjs"]
