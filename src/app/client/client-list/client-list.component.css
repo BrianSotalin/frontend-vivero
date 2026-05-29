@@ -45,6 +45,12 @@ h2 {
   overflow: hidden;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
 }
+/*Estilo para el mensaje de "No se encontraron registros" */
+.sin-registros {
+  text-align: center;
+  color: #888888;
+  padding: 30px;
+}
 /* En móvil, el caption se apila verticalmente */
 @media (max-width: 768px) {
   .table-caption {

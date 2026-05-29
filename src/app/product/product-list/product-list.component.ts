@@ -1,101 +1,88 @@
-import { Component, inject, signal, OnInit, computed } from '@angular/core';
+import { Component, inject, signal, OnInit } from '@angular/core';
 import { CommonModule, CurrencyPipe } from '@angular/common';
-import { ProductService } from '../../services/product.service';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { ProductService } from '../../services/product.service';
+
+// PrimeNG
+import { TableModule } from 'primeng/table';
+import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ToastModule } from 'primeng/toast';
+import { IconField } from 'primeng/iconfield';
+import { InputIcon } from 'primeng/inputicon';
+import { TagModule } from 'primeng/tag';
+import { ConfirmationService, MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-product-list',
   standalone: true,
-  imports: [CommonModule, CurrencyPipe, RouterLink, FormsModule],
+  imports: [
+    CommonModule,
+    CurrencyPipe,
+    RouterLink,
+    FormsModule,
+    TableModule,
+    ButtonModule,
+    InputTextModule,
+    ConfirmDialogModule,
+    ToastModule,
+    IconField,
+    InputIcon,
+    TagModule,
+  ],
+  providers: [ConfirmationService, MessageService],
   templateUrl: './product-list.component.html',
-  styleUrls: ['./product-list.component.css']
+  styleUrls: ['./product-list.component.css'],
 })
 export class ProductListComponent implements OnInit {
   private productService = inject(ProductService);
+  private confirmationService = inject(ConfirmationService);
+  private messageService = inject(MessageService);
+
   productos = signal<any[]>([]);
-  searchText = signal<string>('');
-  // Guardamos temporalmente el producto que se planea eliminar
-  productoSeleccionado = signal<any>(null);
-
-  // --- ESTADO DE PAGINACIÓN ---
-  paginaActual = signal<number>(1);
-  productosPorPagina = signal<number>(5); // Por defecto inicializa en 5
-
-    productosFiltrados = computed(() => {
-    const texto = this.searchText().toLowerCase().trim();
-    if (!texto) return this.productos(); // Si no hay búsqueda, devuelve todos
-    
-    return this.productos().filter(prod => 
-      prod.producto && prod.producto.toLowerCase().includes(texto)
-    );
-  });
-  
-  // --- LÓGICA REACTIVA (COMPUTED) ---
-  // Calcula el total de páginas necesarias
-totalPaginas = computed(() => {
-    return Math.ceil(this.productosFiltrados().length / this.productosPorPagina());
-  });
-
-  // Filtra y corta la lista original para devolver solo los productos de la página activa
-  productosPaginados = computed(() => {
-const texto = this.searchText().toLowerCase().trim();
-const inicio = (this.paginaActual() - 1) * this.productosPorPagina();
-    const fin = inicio + this.productosPorPagina();
-    return this.productosFiltrados().slice(inicio, fin);
-  });
 
   ngOnInit() {
     this.cargarProductos();
   }
+
   cargarProductos() {
     this.productService.getProductos().subscribe({
       next: (data) => this.productos.set(data),
-      error: (err) => console.error('Error cargando productos', err)
+      error: (err) => console.error('Error cargando productos', err),
     });
   }
-  // Al escribir en el buscador, reiniciamos a la página 1 para evitar bugs visuales
-  onSearchChange() {
-    this.paginaActual.set(1);
-  }
-  // Abre el modal guardando el producto seleccionado
-  abrirConfirmacion(producto: any, modal: HTMLDialogElement) {
-    this.productoSeleccionado.set(producto);
-    modal.showModal(); // Método nativo del navegador para mostrar modales
+
+  abrirConfirmacion(producto: any) {
+    this.confirmationService.confirm({
+      message: `¿Estás seguro de que deseas quitar el producto <strong>${producto.producto}</strong> del inventario? Esta acción no se puede deshacer.`,
+      header: `Eliminar "${producto.producto}"`,
+      icon: 'pi pi-exclamation-triangle',
+      acceptLabel: 'Sí, Eliminar',
+      rejectLabel: 'Cancelar',
+      acceptButtonStyleClass: 'p-button-danger',
+      accept: () => this.eliminarProducto(producto),
+    });
   }
 
-  // Cierra el modal y limpia la selección
-  cerrarModal(modal: HTMLDialogElement) {
-    modal.close();
-    this.productoSeleccionado.set(null);
-  }
-
-  // Confirma la eliminación en el servidor
-  confirmarEliminar(modal: HTMLDialogElement) {
-    const prod = this.productoSeleccionado();
-    if (prod) {
-      this.productService.deleteProducto(prod.id).subscribe({
-        next: () => {
-          this.cerrarModal(modal);
-          this.cargarProductos(); // Recarga la tabla automáticamente
-           alert('Producto eliminado con éxito! ');
-        },
-        error: (err) => {
-          console.error('Error al eliminar el producto', err);
-          alert(`No se pudo eliminar el producto : ${err.error?.message || err.message}`);
-        }
-      });
-    }
-  }
-  // Métodos para cambiar de página
-  cambiarPagina(nuevaPagina: number) {
-    if (nuevaPagina >= 1 && nuevaPagina <= this.totalPaginas()) {
-      this.paginaActual.set(nuevaPagina);
-    }
-  }
-
-  // Al cambiar el tamaño (5, 10, 20), reiniciamos a la página 1 para evitar desbordamientos
-  cambiarTamano() {
-    this.paginaActual.set(1);
+  eliminarProducto(producto: any) {
+    this.productService.deleteProducto(producto.id).subscribe({
+      next: () => {
+        this.cargarProductos();
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Producto eliminado',
+          detail: `${producto.producto} fue eliminado con éxito.`,
+        });
+      },
+      error: (err) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: err.error?.message || 'No se pudo eliminar el producto.',
+        });
+      },
+    });
   }
 }

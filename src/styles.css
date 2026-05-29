@@ -1,1 +1,15 @@
 @import "primeicons/primeicons.css";
+
+:root {
+  --p-confirmdialog-content-gap: 1rem;
+}
+
+.p-confirmdialog {
+  text-align: center;
+}
+
+.p-confirmdialog .p-dialog-footer {
+  justify-content: center;
+  display: flex;
+  gap: 1rem;
+}

@@ -1,100 +1,92 @@
+<p-toast />
+<p-confirmDialog />
+
 <div class="container">
   <h2>
     <span class="material-icons">point_of_sale</span>
+    Historial de Ventas
+  </h2>
 
-    Historial de Ventas</h2>
+  <p-table
+    #dt
+    [value]="sales()"
+    [paginator]="true"
+    [rows]="10"
+    [rowsPerPageOptions]="[5, 10, 20]"
+    [globalFilterFields]="['codigo', 'cliente.nombre']"
+    [tableStyle]="{ 'min-width': '55rem' }"
+  >
+    <ng-template pTemplate="caption">
+      <div class="table-caption">
+        <p-iconfield>
+          <p-inputicon styleClass="pi pi-search" />
+          <input
+            pInputText
+            type="text"
+            (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+            placeholder="Buscar por comprobante o cliente..."
+          />
+        </p-iconfield>
 
-  <div class="actions-header">
-    <input 
-      type="text" 
-      [(ngModel)]="searchText" 
-      (ngModelChange)="onSearchChange()"
-      placeholder="Buscar por comprobante o cliente..." 
-      class="search-input"
-    />
-    <button routerLink="/ventas/nueva" class="btn-new-plant">
-      <span class="material-icons">add_circle</span>
-      Nueva Venta
-    </button>
-  </div>
+        <p-button
+          label="Nueva Venta"
+          icon="pi pi-plus-circle"
+          [routerLink]="['/ventas/nueva']"
+          severity="secondary"
+        />
+      </div>
+    </ng-template>
 
-  <div class="table-responsive">
-    <table class="product-table">
-      <thead>
-        <tr>
-          <th>Comprobante</th>
-          <th>Fecha / Hora</th>
-          <th>Cliente</th>
-          <th>Total</th>
-          <th>Estado</th>
-          <th>Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let venta of ventasPaginadas()">
-          <td><span class="badge-code">{{ venta.codigo }}</span></td>
-          <td>{{ venta.fecha | date:'dd/MM/yyyy HH:mm' }}</td>
-          <td>{{ venta.cliente ? venta.cliente.nombre : 'Consumidor Final' }}</td>
-          <td><b>${{ venta.total | number:'1.2-2' }}</b></td>
-          <td>
-<span class="badge-status" [ngClass]="clasesEstado[venta.estado]">
-  {{ textosEstado[venta.estado] }}
-</span>
-          </td>
-          <td>
-            <button class="btn-view-row" [routerLink]="['/ventas/', venta.id]">
-              <span class="material-icons icon-gray">visibility</span>
-            </button>
-              <button class="btn-delete-row" (click)="abrirConfirmacion(venta, miModal)">
-              <span class="material-icons icon-rojo">delete</span>
-            </button>
-          </td>
-        </tr>
-        <tr *ngIf="ventasPaginadas().length === 0">
-<td colspan="6" class="sin-registros">
-  No se encontraron registros de ventas.
-</td>
-        </tr>
-      </tbody>
-    </table>
+    <ng-template pTemplate="header">
+      <tr>
+        <th pSortableColumn="codigo">Comprobante <p-sortIcon field="codigo" /></th>
+        <th pSortableColumn="fecha">Fecha / Hora <p-sortIcon field="fecha" /></th>
+        <th>Cliente</th>
+        <th pSortableColumn="total">Total <p-sortIcon field="total" /></th>
+        <th pSortableColumn="estado">Estado <p-sortIcon field="estado" /></th>
+        <th style="text-align: center">Acciones</th>
+      </tr>
+    </ng-template>
 
-  </div>
+    <ng-template pTemplate="body" let-venta>
+      <tr>
+        <td><span class="badge-code">{{ venta.codigo }}</span></td>
+        <td>{{ venta.fecha | date:'dd/MM/yyyy HH:mm' }}</td>
+        <td>{{ venta.cliente ? venta.cliente.nombre : 'Consumidor Final' }}</td>
+        <td><b>${{ venta.total | number:'1.2-2' }}</b></td>
+        <td>
+          <p-tag
+            [value]="textosEstado[venta.estado]"
+            [severity]="severidadEstado[venta.estado]"
+          />
+        </td>
+        <td style="text-align: center">
+          <p-button
+            icon="pi pi-eye"
+            [rounded]="true"
+            [text]="true"
+            severity="secondary"
+            [routerLink]="['/ventas/', venta.id]"
+            title="Ver detalle"
+          />
+          <p-button
+            icon="pi pi-trash"
+            [rounded]="true"
+            [text]="true"
+            severity="danger"
+            (click)="abrirConfirmacion(venta)"
+            title="Eliminar"
+          />
+        </td>
+      </tr>
+    </ng-template>
 
-      <div class="pagination-container">
-    <div class="page-size-selector">
-      <label>Mostrar: </label>
-      <select [(ngModel)]="ventasPorPagina" (change)="cambiarTamano()">
-        <option [ngValue]="5">5 ventas</option>
-        <option [ngValue]="10">10 ventas</option>
-        <option [ngValue]="20">20 ventas</option>
-      </select>
-    </div>
-
-    <div class="page-buttons">
-      <button (click)="cambiarPagina(paginaActual() - 1)" [disabled]="paginaActual() === 1" class="btn-page">
-        <span class="material-icons">chevron_left</span>
-      </button>
-      
-      <span class="page-info">Página {{ paginaActual() }} de {{ totalPaginas() || 1 }}</span>
-      
-      <button (click)="cambiarPagina(paginaActual() + 1)" [disabled]="paginaActual() === totalPaginas() || totalPaginas() === 0" class="btn-page">
-        <span class="material-icons">chevron_right</span>
-      </button>
-    </div>
-  </div>
-
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="6" style="text-align: center">
+          No se encontraron registros de ventas.
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
 </div>
-
-    <!-- MODAL NATIVO DE CONFIRMACIÓN -->
-<dialog #miModal class="confirm-modal">
-  <div class="modal-content">
-    <span class="material-icons alert">warning</span>
-    <h2>Eliminar #{{ ventaSeleccionada()?.codigo }}</h2>
-    <p>¿Estás seguro de que deseas quitar venta <strong>#{{ ventaSeleccionada()?.codigo }}</strong> del historial? <br> Esta acción no se puede deshacer.</p>
-
-    <div class="modal-actions">
-      <button class="btn-confirm-delete" (click)="confirmarEliminar(miModal)">Sí, Eliminar</button>
-      <button class="btn-cancel-delete" (click)="cerrarModal(miModal)">Cancelar</button>
-    </div>
-  </div>
-</dialog>

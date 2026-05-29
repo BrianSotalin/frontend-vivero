@@ -1,41 +1,59 @@
-import { Component, inject, signal, OnInit, computed } from '@angular/core';
+import { Component, inject, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SalesService } from '../../services/sales.service';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { SalesService } from '../../services/sales.service';
+
+// PrimeNG
+import { TableModule } from 'primeng/table';
+import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ToastModule } from 'primeng/toast';
+import { IconField } from 'primeng/iconfield';
+import { InputIcon } from 'primeng/inputicon';
+import { TagModule } from 'primeng/tag';
+import { ConfirmationService, MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-sales-list',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule],
+  imports: [
+    CommonModule,
+    RouterLink,
+    FormsModule,
+    TableModule,
+    ButtonModule,
+    InputTextModule,
+    ConfirmDialogModule,
+    ToastModule,
+    IconField,
+    InputIcon,
+    TagModule,
+  ],
+  providers: [ConfirmationService, MessageService],
   templateUrl: './sales-list.component.html',
-  styleUrls: ['./sales-list.component.css'] // Mismo CSS de tus tablas anteriores
+  styleUrls: ['./sales-list.component.css'],
 })
 export class SalesListComponent implements OnInit {
   private salesService = inject(SalesService);
+  private confirmationService = inject(ConfirmationService);
+  private messageService = inject(MessageService);
 
   sales = signal<any[]>([]);
-  searchText = signal<string>('');
 
-  // Paginación
-  paginaActual = signal<number>(1);
-  ventasPorPagina = signal<number>(5);
-  // Guardamos temporalmente la venta que se planea eliminar
-  ventaSeleccionada = signal<any>(null);
-
-  // 1. Diccionario para los textos que verá el usuario
+  // Mapeo de estado a texto y severidad de p-tag
   textosEstado: { [key: number]: string } = {
     0: 'PAGADO',
     1: 'DEUDA',
-    2: 'ABONADO'
+    2: 'ABONADO',
   };
 
-  // 2. Diccionario para las clases CSS de los badges
-  clasesEstado: { [key: number]: string } = {
-    0: 'status-paid',
-    1: 'status-debt',    // Puedes crear una clase intermedia para la deuda
-    2: 'status-pending' // O 'status-abonado'
-  };
+ severidadEstado: { [key: number]: 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contrast' } = {
+  0: 'success',
+  1: 'danger',
+  2: 'warn',
+};
 
   ngOnInit() {
     this.cargarVentas();
@@ -44,71 +62,39 @@ export class SalesListComponent implements OnInit {
   cargarVentas() {
     this.salesService.getSales().subscribe({
       next: (data) => this.sales.set(data),
-      error: (err) => console.error('Error cargando ventas:', err)
+      error: (err) => console.error('Error cargando ventas:', err),
     });
   }
 
-  // Filtrado inteligente por Comprobante o por Nombre de Cliente
-  salesFiltradas = computed(() => {
-    const texto = this.searchText().toLowerCase().trim();
-    if (!texto) return this.sales();
-
-    return this.sales().filter(v => {
-      const numComprobante = v.codigo?.toLowerCase() || '';
-      const nombreCliente = v.cliente?.nombre?.toLowerCase() || 'consumidor final';
-      return numComprobante.includes(texto) || nombreCliente.includes(texto);
+  abrirConfirmacion(venta: any) {
+    this.confirmationService.confirm({
+      message: `¿Estás seguro de que deseas quitar la venta <strong>#${venta.codigo}</strong> del historial? Esta acción no se puede deshacer.`,
+      header: `Eliminar #${venta.codigo}`,
+      icon: 'pi pi-exclamation-triangle',
+      acceptLabel: 'Sí, Eliminar',
+      rejectLabel: 'Cancelar',
+      acceptButtonStyleClass: 'p-button-danger',
+      accept: () => this.eliminarVenta(venta),
     });
-  });
-
-  // Cálculos de paginación reactiva
-  totalPaginas = computed(() => Math.ceil(this.salesFiltradas().length / this.ventasPorPagina()));
-
-  ventasPaginadas = computed(() => {
-    const inicio = (this.paginaActual() - 1) * this.ventasPorPagina();
-    const fin = inicio + this.ventasPorPagina();
-    return this.salesFiltradas().slice(inicio, fin);
-  });
-
-  onSearchChange() {
-    this.paginaActual.set(1); // Resetea a la primera página al escribir
   }
 
-  cambiarPagina(nuevaPagina: number) {
-    if (nuevaPagina >= 1 && nuevaPagina <= this.totalPaginas()) {
-      this.paginaActual.set(nuevaPagina);
-    }
-  }
-    // Al cambiar el tamaño (5, 10, 20), reiniciamos a la página 1 para evitar desbordamientos
-  cambiarTamano() {
-    this.paginaActual.set(1);
-  }
-
-  // Abre el modal guardando la venta seleccionada
-  abrirConfirmacion(venta: any, modal: HTMLDialogElement) {
-    this.ventaSeleccionada.set(venta);
-    modal.showModal(); // Método nativo del navegador para mostrar modales
-  }
-
-  // Cierra el modal y limpia la selección
-  cerrarModal(modal: HTMLDialogElement) {
-    modal.close();
-    this.ventaSeleccionada.set(null);
-  }
-
- confirmarEliminar(modal: HTMLDialogElement) {
-    const venta = this.ventaSeleccionada();
-    if (venta) {
-      this.salesService.deleteSale(venta.id).subscribe({
-        next: () => {
-          this.cerrarModal(modal);
-          this.cargarVentas(); // Recarga la tabla automáticamente
-           alert('Venta eliminada con éxito! ');
-        },
-        error: (err) => {
-          console.error('Error al eliminar la venta', err);
-          alert(`No se pudo eliminar la venta : ${err.error?.message || err.message}`);
-        }
-      });
-    }
+  eliminarVenta(venta: any) {
+    this.salesService.deleteSale(venta.id).subscribe({
+      next: () => {
+        this.cargarVentas();
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Venta eliminada',
+          detail: `Venta #${venta.codigo} eliminada con éxito.`,
+        });
+      },
+      error: (err) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: err.error?.message || 'No se pudo eliminar la venta.',
+        });
+      },
+    });
   }
 }

@@ -1,41 +1,46 @@
-import { Component, inject, signal, OnInit, computed } from '@angular/core';
+import { Component, inject, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { UsuarioService } from '../../services/user.service';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { UsuarioService } from '../../services/user.service';
+
+// PrimeNG
+import { TableModule } from 'primeng/table';
+import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ToastModule } from 'primeng/toast';
+import { IconField } from 'primeng/iconfield';
+import { InputIcon } from 'primeng/inputicon';
+import { TagModule } from 'primeng/tag';
+import { ConfirmationService, MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-usuario-list',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule],
+  imports: [
+    CommonModule,
+    RouterLink,
+    FormsModule,
+    TableModule,
+    ButtonModule,
+    InputTextModule,
+    ConfirmDialogModule,
+    ToastModule,
+    IconField,
+    InputIcon,
+    TagModule,
+  ],
+  providers: [ConfirmationService, MessageService],
   templateUrl: './user-list.component.html',
-  styleUrls: ['./user-list.component.css'] // Reutiliza tus estilos de tablas
+  styleUrls: ['./user-list.component.css'],
 })
 export class UsuarioListComponent implements OnInit {
   private usuarioService = inject(UsuarioService);
-  
+  private confirmationService = inject(ConfirmationService);
+  private messageService = inject(MessageService);
+
   usuarios = signal<any[]>([]);
-  searchText = signal<string>(''); 
-  usuarioSeleccionado = signal<any>(null);
-
-  paginaActual = signal<number>(1);
-  usuariosPorPagina = signal<number>(5);
-
-  usuariosFiltrados = computed(() => {
-    const texto = this.searchText().toLowerCase().trim();
-    if (!texto) return this.usuarios();
-    return this.usuarios().filter(u => u.username && u.username.toLowerCase().includes(texto));
-  });
-
-  totalPaginas = computed(() => {
-    return Math.ceil(this.usuariosFiltrados().length / this.usuariosPorPagina());
-  });
-
-  usuariosPaginados = computed(() => {
-    const inicio = (this.paginaActual() - 1) * this.usuariosPorPagina();
-    const fin = inicio + this.usuariosPorPagina();
-    return this.usuariosFiltrados().slice(inicio, fin);
-  });
 
   ngOnInit() {
     this.cargarUsuarios();
@@ -44,45 +49,39 @@ export class UsuarioListComponent implements OnInit {
   cargarUsuarios() {
     this.usuarioService.getUsuarios().subscribe({
       next: (data) => this.usuarios.set(data),
-      error: (err) => console.error('Error cargando usuarios', err)
+      error: (err) => console.error('Error cargando usuarios', err),
     });
   }
 
-  onSearchChange() {
-    this.paginaActual.set(1);
+  abrirConfirmacion(usuario: any) {
+    this.confirmationService.confirm({
+      message: `¿Estás seguro de que deseas eliminar al usuario <strong>${usuario.username}</strong>? Esta acción no se puede deshacer.`,
+      header: `Eliminar "${usuario.username}"`,
+      icon: 'pi pi-exclamation-triangle',
+      acceptLabel: 'Sí, Eliminar',
+      rejectLabel: 'Cancelar',
+      acceptButtonStyleClass: 'p-button-danger',
+      accept: () => this.eliminarUsuario(usuario),
+    });
   }
 
-  abrirConfirmacion(usuario: any, modal: HTMLDialogElement) {
-    this.usuarioSeleccionado.set(usuario);
-    modal.showModal();
-  }
-
-  cerrarModal(modal: HTMLDialogElement) {
-    modal.close();
-    this.usuarioSeleccionado.set(null);
-  }
-
-  confirmarEliminar(modal: HTMLDialogElement) {
-    const user = this.usuarioSeleccionado();
-    if (user) {
-      this.usuarioService.deleteUsuario(user.id).subscribe({
-        next: () => {
-          this.cerrarModal(modal);
-          this.cargarUsuarios();
-          alert('Usuario eliminado con éxito!');
-        },
-        error: (err) => alert('No se pudo eliminar el usuario')
-      });
-    }
-  }
-
-  cambiarPagina(nuevaPagina: number) {
-    if (nuevaPagina >= 1 && nuevaPagina <= this.totalPaginas()) {
-      this.paginaActual.set(nuevaPagina);
-    }
-  }
-    // Al cambiar el tamaño (5, 10, 20), reiniciamos a la página 1 para evitar desbordamientos
-  cambiarTamano() {
-    this.paginaActual.set(1);
+  eliminarUsuario(usuario: any) {
+    this.usuarioService.deleteUsuario(usuario.id).subscribe({
+      next: () => {
+        this.cargarUsuarios();
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Usuario eliminado',
+          detail: `${usuario.username} fue eliminado con éxito.`,
+        });
+      },
+      error: () => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'No se pudo eliminar el usuario.',
+        });
+      },
+    });
   }
 }

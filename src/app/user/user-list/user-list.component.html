@@ -1,92 +1,88 @@
-<div class="table-container">
-  <h2> 
+<p-toast />
+<p-confirmDialog />
+
+<div class="container">
+  <h2>
     <span class="material-icons icono-llave">key</span>
     Gestión de Usuarios del Sistema
-</h2>
+  </h2>
 
-  <div class="actions-header">
-    <input 
-      type="text" 
-      [(ngModel)]="searchText" 
-      (ngModelChange)="onSearchChange()"
-      placeholder="Buscar por usuario..." 
-      class="search-input"
-    />
-    <button routerLink="/usuarios/nuevo" class="btn-add">
-        <span class="material-icons">add_circle</span>
-      Nuevo Usuario
-    </button>
-  </div>
+  <p-table
+    #dt
+    [value]="usuarios()"
+    [paginator]="true"
+    [rows]="10"
+    [rowsPerPageOptions]="[5, 10, 20]"
+    [globalFilterFields]="['username', 'rol']"
+    [tableStyle]="{ 'min-width': '40rem' }"
+  >
+    <ng-template pTemplate="caption">
+      <div class="table-caption">
+        <p-iconfield>
+          <p-inputicon styleClass="pi pi-search" />
+          <input
+            pInputText
+            type="text"
+            (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+            placeholder="Buscar por usuario..."
+          />
+        </p-iconfield>
 
-  <table class="user-table">
-    <thead>
+        <p-button
+          label="Nuevo Usuario"
+          icon="pi pi-plus-circle"
+          [routerLink]="['/usuarios/nuevo']"
+           severity="secondary"
+        />
+      </div>
+    </ng-template>
+
+    <ng-template pTemplate="header">
       <tr>
-        <th>ID</th>
-        <th>Nombre de Usuario (Username)</th>
-        <th>Rol / Permisos</th>
-        <th>Acciones</th>
+        <th pSortableColumn="id">ID <p-sortIcon field="id" /></th>
+        <th pSortableColumn="username">Username <p-sortIcon field="username" /></th>
+        <th pSortableColumn="rol">Rol <p-sortIcon field="rol" /></th>
+        <th style="text-align: center">Acciones</th>
       </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let user of usuariosPaginados()">
-        <td>{{ user.id }}</td>
-        <td><b class="username-text">{{ user.username }}</b></td>
-        <td>
-          <span class="role-badge">
-            {{ user.rol || 'USER' }}
-          </span>
-        </td>
-<td class="actions-cell">
-  <button class="btn-edit-row" [routerLink]="['/usuarios/editar', user.id]">
-   <span class="material-icons icono-llave">key</span>
-  </button>
-  <button class="btn-delete-row" (click)="abrirConfirmacion(user, modalEliminar)">
-    <span class="material-icons icon-red">delete</span>
-  </button>
-</td>
+    </ng-template>
 
+    <ng-template pTemplate="body" let-user>
+      <tr>
+        <td>{{ user.id }}</td>
+        <td><b>{{ user.username }}</b></td>
+        <td>
+          <p-tag
+            [value]="user.rol || 'USER'"
+            [severity]="user.rol === 'ADMIN' ? 'danger' : 'info'"
+          />
+        </td>
+        <td style="text-align: center">
+          <p-button
+            icon="pi pi-key"
+            [rounded]="true"
+            [text]="true"
+            severity="info"
+            [routerLink]="['/usuarios/editar', user.id]"
+            title="Editar"
+          />
+          <p-button
+            icon="pi pi-trash"
+            [rounded]="true"
+            [text]="true"
+            severity="danger"
+            (click)="abrirConfirmacion(user)"
+            title="Eliminar"
+          />
+        </td>
       </tr>
-      <tr *ngIf="usuariosPaginados().length === 0">
-        <td colspan="6" class="sin-registros">
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="6"  class="sin-registros">
           No se encontraron usuarios.
         </td>
       </tr>
-    </tbody>
-  </table>
-
-      <div class="pagination-container">
-    <div class="page-size-selector">
-      <label>Mostrar: </label>
-      <select [(ngModel)]="usuariosPorPagina" (change)="cambiarTamano()">
-        <option [ngValue]="5">5 usuarios</option>
-        <option [ngValue]="10">10 usuarios</option>
-        <option [ngValue]="20">20 usuarios</option>
-      </select>
-    </div>
-
-    <div class="page-buttons">
-      <button (click)="cambiarPagina(paginaActual() - 1)" [disabled]="paginaActual() === 1" class="btn-page">
-        <span class="material-icons">chevron_left</span>
-      </button>
-      
-      <span class="page-info">Página {{ paginaActual() }} de {{ totalPaginas() || 1 }}</span>
-      
-      <button (click)="cambiarPagina(paginaActual() + 1)" [disabled]="paginaActual() === totalPaginas() || totalPaginas() === 0" class="btn-page">
-        <span class="material-icons">chevron_right</span>
-      </button>
-    </div>
-  </div>
-
+    </ng-template>
+  </p-table>
 </div>
-
-<dialog #modalEliminar class="confirm-modal">
-  <div class="modal-content">
-    <span class="material-icons alert">warning</span>
-    <h2>Eliminar  '{{ usuarioSeleccionado()?.username }}'</h2>
-    <p>¿Estás seguro de que deseas quitar al usuario <strong>{{ usuarioSeleccionado()?.username }}</strong> del sistema? <br> Esta acción no se puede deshacer.</p>
-    <div class="modal-actions">
-      <button (click)="confirmarEliminar(modalEliminar)" class="btn-confirm-delete">Sí, Eliminar</button>
-      <button (click)="cerrarModal(modalEliminar)" class="btn-cancel-delete">Cancelar</button>
-    </div>
-  </div>
-</dialog>

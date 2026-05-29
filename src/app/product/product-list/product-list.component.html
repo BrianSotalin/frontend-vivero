@@ -1,100 +1,89 @@
-    <div class="container">
-  
-        <h2 >
-      <span class="material-symbols-outlined">
-potted_plant
-</span>
+<p-toast />
+<p-confirmDialog />
 
-          Inventario de Productos
-        </h2>
-      
-       <div class="actions-header">
-    <input 
-      type="text" 
-      [(ngModel)]="searchText" 
-      (ngModelChange)="onSearchChange()"
-      placeholder="Buscar producto por nombre..." 
-      class="search-input"
-    />
-    <button class="btn-new-plant" routerLink="/productos/nuevo">
-      <span class="material-icons">add_circle</span>
-      Nueva Planta
-    </button>
-       </div>
+<div class="container">
+  <h2>
+    <span class="material-symbols-outlined">potted_plant</span>
+    Inventario de Productos
+  </h2>
 
-      <table class="product-table">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Producto</th>
-            <th>Categoría</th>
-            <th>P. Compra</th>
-            <th>P. Venta</th>
-            <th style="text-align: center;">Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (p of productosPaginados(); track p.id) {
-            <tr>
-              <td>{{ p.id }}</td>
-              <td>{{ p.producto }}</td>
-              <td><span class="badge">{{ p.categoria }}</span></td>
-              <td>{{ p.precioCompra | currency }}</td>
-              <td>{{ p.precioVenta | currency }}</td>
-              
-              <!-- BOTÓN ELIMINAR Y EDITAR-->
-          <td style="text-align: center;">
-            <button [routerLink]="['/productos/editar', p.id]" class="btn-edit-row" title="Editar">
-               <span class="material-icons" style="color: #1976d2;">edit</span>
-             </button>
-            <button class="btn-delete-row" (click)="abrirConfirmacion(p, miModal)">
-              <span class="material-icons icon-rojo">delete</span>
-            </button>
-          </td>
-            </tr>
-          }
-                <tr *ngIf="productosPaginados().length === 0">
+  <p-table
+    #dt
+    [value]="productos()"
+    [paginator]="true"
+    [rows]="10"
+    [rowsPerPageOptions]="[5, 10, 20]"
+    [globalFilterFields]="['producto', 'categoria']"
+    [tableStyle]="{ 'min-width': '50rem' }"
+  >
+    <ng-template pTemplate="caption">
+      <div class="table-caption">
+        <p-iconfield>
+          <p-inputicon styleClass="pi pi-search" />
+          <input
+            pInputText
+            type="text"
+            (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+            placeholder="Buscar  por producto..."
+          />
+        </p-iconfield>
+
+        <p-button
+          label="Nueva Planta"
+          icon="pi pi-plus-circle"
+          [routerLink]="['/productos/nuevo']"
+          severity="secondary"
+        />
+      </div>
+    </ng-template>
+
+    <ng-template pTemplate="header">
+      <tr>
+        <th pSortableColumn="id">ID <p-sortIcon field="id" /></th>
+        <th pSortableColumn="producto">Producto <p-sortIcon field="producto" /></th>
+        <th pSortableColumn="categoria">Categoría <p-sortIcon field="categoria" /></th>
+        <th pSortableColumn="precioCompra">P. Compra <p-sortIcon field="precioCompra" /></th>
+        <th pSortableColumn="precioVenta">P. Venta <p-sortIcon field="precioVenta" /></th>
+        <th style="text-align: center">Acciones</th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-p>
+      <tr>
+        <td>{{ p.id }}</td>
+        <td>{{ p.producto }}</td>
+        <td>
+          <p-tag [value]="p.categoria" severity="secondary" />
+        </td>
+        <td>{{ p.precioCompra | currency }}</td>
+        <td>{{ p.precioVenta | currency }}</td>
+        <td style="text-align: center">
+          <p-button
+            icon="pi pi-pencil"
+            [rounded]="true"
+            [text]="true"
+            severity="info"
+            [routerLink]="['/productos/editar', p.id]"
+            title="Editar"
+          />
+          <p-button
+            icon="pi pi-trash"
+            [rounded]="true"
+            [text]="true"
+            severity="danger"
+            (click)="abrirConfirmacion(p)"
+            title="Eliminar"
+          />
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+      <tr>
         <td colspan="6" class="sin-registros">
           No se encontraron productos.
         </td>
       </tr>
-        </tbody>
-      </table>
-      <div class="pagination-container">
-    <div class="page-size-selector">
-      <label>Mostrar: </label>
-      <select [(ngModel)]="productosPorPagina" (change)="cambiarTamano()">
-        <option [ngValue]="5">5 productos</option>
-        <option [ngValue]="10">10 productos</option>
-        <option [ngValue]="20">20 productos</option>
-      </select>
-    </div>
-
-    <div class="page-buttons">
-      <button (click)="cambiarPagina(paginaActual() - 1)" [disabled]="paginaActual() === 1" class="btn-page">
-        <span class="material-icons">chevron_left</span>
-      </button>
-      
-      <span class="page-info">Página {{ paginaActual() }} de {{ totalPaginas() || 1 }}</span>
-      
-      <button (click)="cambiarPagina(paginaActual() + 1)" [disabled]="paginaActual() === totalPaginas() || totalPaginas() === 0" class="btn-page">
-        <span class="material-icons">chevron_right</span>
-      </button>
-    </div>
-  </div>
-
-    </div>
-
-    <!-- MODAL NATIVO DE CONFIRMACIÓN -->
-<dialog #miModal class="confirm-modal">
-  <div class="modal-content">
-    <span class="material-icons alert">warning</span>
-    <h2>Eliminar '{{ productoSeleccionado()?.producto }}'</h2>
-    <p>¿Estás seguro de que deseas quitar  el producto <strong>{{ productoSeleccionado()?.producto }}</strong> del inventario? <br>Esta acción no se puede deshacer.</p>
-    
-    <div class="modal-actions">
-      <button class="btn-confirm-delete" (click)="confirmarEliminar(miModal)">Sí, Eliminar</button>
-      <button class="btn-cancel-delete" (click)="cerrarModal(miModal)">Cancelar</button>
-    </div>
-  </div>
-</dialog>
+    </ng-template>
+  </p-table>
+</div>

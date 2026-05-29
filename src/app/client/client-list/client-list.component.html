@@ -24,7 +24,7 @@
             pInputText
             type="text"
             (input)="dt.filterGlobal($any($event.target).value, 'contains')"
-            placeholder="Buscar cliente..."
+            placeholder="Buscar por cliente..."
           />
         </p-iconfield>
 
@@ -32,6 +32,7 @@
           label="Nuevo Cliente"
           icon="pi pi-plus-circle"
           [routerLink]="['/clientes/nuevo']"
+           severity="secondary"
         />
       </div>
     </ng-template>
@@ -75,7 +76,7 @@
 
     <ng-template pTemplate="emptymessage">
       <tr>
-        <td colspan="5" style="text-align: center">
+        <td colspan="6"  class="sin-registros">
           No se encontraron clientes.
         </td>
       </tr>
