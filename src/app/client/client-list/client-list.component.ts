@@ -1,43 +1,44 @@
-import { Component, inject, signal, OnInit, computed } from '@angular/core';
+import { Component, inject, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ClientService } from '../../services/client.service';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { ClientService } from '../../services/client.service';
+
+// PrimeNG v19+
+import { TableModule } from 'primeng/table';
+import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ToastModule } from 'primeng/toast';
+import { IconField } from 'primeng/iconfield';
+import { InputIcon } from 'primeng/inputicon';
+import { ConfirmationService, MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-cliente-list',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule],
+  imports: [
+    CommonModule,
+    RouterLink,
+    FormsModule,
+    TableModule,
+    ButtonModule,
+    InputTextModule,
+    ConfirmDialogModule,
+    ToastModule,
+    IconField,      // ← ya no es IconFieldModule
+    InputIcon,      // ← ya no es InputIconModule
+  ],
+  providers: [ConfirmationService, MessageService],
   templateUrl: './client-list.component.html',
-  styleUrls: ['./client-list.component.css'] // Reutiliza los estilos de productos
+  styleUrls: ['./client-list.component.css'],
 })
 export class ClientListComponent implements OnInit {
   private clienteService = inject(ClientService);
-  
+  private confirmationService = inject(ConfirmationService);
+  private messageService = inject(MessageService);
+
   clientes = signal<any[]>([]);
-  searchText = signal<string>(''); 
-  clienteSeleccionado = signal<any>(null);
-
-  // Paginación
-  paginaActual = signal<number>(1);
-  clientesPorPagina = signal<number>(5);
-
-  // Filtrado reactivo por nombre de cliente
-  clientesFiltrados = computed(() => {
-    const texto = this.searchText().toLowerCase().trim();
-    if (!texto) return this.clientes();
-    return this.clientes().filter(c => c.nombre && c.nombre.toLowerCase().includes(texto));
-  });
-
-  totalPaginas = computed(() => {
-    return Math.ceil(this.clientesFiltrados().length / this.clientesPorPagina());
-  });
-
-  clientesPaginados = computed(() => {
-    const inicio = (this.paginaActual() - 1) * this.clientesPorPagina();
-    const fin = inicio + this.clientesPorPagina();
-    return this.clientesFiltrados().slice(inicio, fin);
-  });
 
   ngOnInit() {
     this.cargarClientes();
@@ -46,48 +47,39 @@ export class ClientListComponent implements OnInit {
   cargarClientes() {
     this.clienteService.getClientes().subscribe({
       next: (data) => this.clientes.set(data),
-      error: (err) => console.error('Error cargando clientes', err)
+      error: (err) => console.error('Error cargando clientes', err),
     });
   }
 
-  onSearchChange() {
-    this.paginaActual.set(1);
+  abrirConfirmacion(cliente: any) {
+    this.confirmationService.confirm({
+      message: `¿Estás seguro de que deseas eliminar a <strong>${cliente.nombre}</strong>? Esta acción no se puede deshacer.`,
+      header: `Eliminar "${cliente.nombre}"`,
+      icon: 'pi pi-exclamation-triangle',
+      acceptLabel: 'Sí, Eliminar',
+      rejectLabel: 'Cancelar',
+      acceptButtonStyleClass: 'p-button-danger',
+      accept: () => this.eliminarCliente(cliente),
+    });
   }
 
-  abrirConfirmacion(cliente: any, modal: HTMLDialogElement) {
-    this.clienteSeleccionado.set(cliente);
-    modal.showModal();
-  }
-
-  cerrarModal(modal: HTMLDialogElement) {
-    modal.close();
-    this.clienteSeleccionado.set(null);
-  }
-
-  confirmarEliminar(modal: HTMLDialogElement) {
-    const cli = this.clienteSeleccionado();
-    if (cli) {
-      this.clienteService.deleteCliente(cli.id).subscribe({
-        next: () => {
-          this.cerrarModal(modal);
-          this.cargarClientes();
-          alert('Cliente eliminado con éxito! 👤');
-        },
-        error: (err) => {
-          console.error('Error al eliminar el cliente', err);
-          alert(`No se pudo eliminar el cliente : ${err.error?.message || err.message}`);
-        }
-      });
-    }
-  }
-
-  cambiarPagina(nuevaPagina: number) {
-    if (nuevaPagina >= 1 && nuevaPagina <= this.totalPaginas()) {
-      this.paginaActual.set(nuevaPagina);
-    }
-  }
-    // Al cambiar el tamaño (5, 10, 20), reiniciamos a la página 1 para evitar desbordamientos
-  cambiarTamano() {
-    this.paginaActual.set(1);
+  eliminarCliente(cliente: any) {
+    this.clienteService.deleteCliente(cliente.id).subscribe({
+      next: () => {
+        this.cargarClientes();
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Cliente eliminado',
+          detail: `${cliente.nombre} fue eliminado con éxito.`,
+        });
+      },
+      error: (err) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: err.error?.message || 'No se pudo eliminar el cliente.',
+        });
+      },
+    });
   }
 }

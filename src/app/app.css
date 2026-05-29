@@ -1,3 +1,15 @@
+/* Evita que el overlay del confirmDialog quede tapado por el sidebar */
+:root {
+  --p-overlay-modal-background: rgba(0, 0, 0, 0.4);
+}
+
+.p-overlay-mask {
+  z-index: 1300 !important;
+}
+
+.p-dialog {
+  z-index: 1400 !important;
+}
 /* Layout Principal */
 .app-layout {
   display: flex;
@@ -136,37 +148,37 @@
   cursor: pointer;
   box-shadow: 0 2px 8px rgba(0,0,0,0.2);
 }
-
 /* --- ESTILOS MÓVIL (Menos de 768px) --- */
 @media (max-width: 768px) {
   .mobile-menu-btn {
-    display: flex; /* Aparece en móviles */
+    display: flex;
   }
 
   .sidebar {
-    left: -260px; /* Escondido por defecto */
+    left: -260px;
     transition: 0.3s ease all;
     z-index: 1200;
   }
 
   .sidebar.open {
-    left: 0; /* Entra desde la izquierda */
+    left: 0;
   }
 
   .main-content {
     margin-left: 0 !important;
-    padding-top: 70px; /* Deja espacio para el botón de arriba */
+    padding-top: 70px;
+    width: 100%;          /* ← AÑADE ESTO */
+    overflow-x: hidden;   /* ← AÑADE ESTO */
   }
 
-  /* Capa oscura detrás del menú */
   .sidebar-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: rgba(0,0,0,0.5);
+    background: rgba(0, 0, 0, 0.5);
     z-index: 1050;
   }
+  
 }
-
