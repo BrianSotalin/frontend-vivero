@@ -69,6 +69,14 @@
             [routerLink]="['/ventas/', venta.id]"
             title="Ver detalle"
           />
+                    <p-button
+            icon="pi pi-pencil"
+            [rounded]="true"
+            [text]="true"
+            severity="info"
+            [routerLink]="['/ventas/editar', venta.id]"
+            title="Editar"
+          />
           <p-button
             icon="pi pi-trash"
             [rounded]="true"
