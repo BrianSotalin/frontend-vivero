@@ -176,6 +176,12 @@ h2 {
 .btn-page .material-icons {
   font-size: 20px;
 }
+/*Estilo para el mensaje de "No se encontraron registros" */
+.sin-registros {
+  text-align: center;
+  color: #888888;
+  padding: 30px;
+}
 
 /* Estilos del Modal Nativo <dialog> */
 .confirm-modal {

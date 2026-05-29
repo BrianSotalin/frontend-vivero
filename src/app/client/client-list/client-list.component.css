@@ -97,6 +97,12 @@ h2 {
   color: #e53935; /* El rojo exacto que querías */
   font-size: 24px; /* Controla el tamaño fácilmente aquí */
 }
+/*Estilo para el mensaje de "No se encontraron registros" */
+.sin-registros {
+  text-align: center;
+  color: #888888;
+  padding: 30px;
+}
 
 /* Estilos del Modal Nativo <dialog> */
 .confirm-modal {

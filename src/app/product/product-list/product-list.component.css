@@ -75,7 +75,11 @@
     td { padding: 12px 15px; border-bottom: 1px solid #eee; }
     tr:hover { background-color: #f9fff9; }
  
-
+.sin-registros {
+  text-align: center;
+  color: #888888;
+  padding: 30px;
+}
 /* Contenedor general de la paginación */
 .pagination-container {
   display: flex;

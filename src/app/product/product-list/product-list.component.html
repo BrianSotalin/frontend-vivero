@@ -53,6 +53,11 @@ potted_plant
           </td>
             </tr>
           }
+                <tr *ngIf="productosPaginados().length === 0">
+        <td colspan="6" class="sin-registros">
+          No se encontraron productos.
+        </td>
+      </tr>
         </tbody>
       </table>
       <div class="pagination-container">
