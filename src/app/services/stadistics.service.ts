@@ -9,11 +9,16 @@ import { environment } from '../../environments/environment';
 export class EstadisticasService {
 // 1. Usamos inject() que es el estándar de Angular 18
   private http = inject(HttpClient);
-  private apiUrl = `${environment.apiUrl}/estadisticas/resumen`;
+  private apiUrl = `${environment.apiUrl}/estadisticas`;
 
-  // 2. El método queda súper simple. 
-  // El Interceptor se encargará de "pegar" el token antes de que salga la petición.
-  getResumen(): Observable<any> {
-    return this.http.get(this.apiUrl);
-  }
+getResumen(): Observable<any> {
+  return this.http.get(`${this.apiUrl}/resumen`);
+}
+  getVentasPorMes(): Observable<any[]> {
+  return this.http.get<any[]>(`${this.apiUrl}/ventas-por-mes`);
+}
+
+getTopProductos(): Observable<any[]> {
+  return this.http.get<any[]>(`${this.apiUrl}/top-productos`);
+}
 }

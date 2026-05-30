@@ -1,41 +1,84 @@
-  <h1 class="dashboard-title">
-    <span class="material-icons">insights</span>
+<h1 class="dashboard-title">
+  <span class="material-icons">insights</span>
+  Estadísticas
+</h1>
 
-    Estadísticas</h1>
-      
-  @if (resumen()) {
-    <div class="stats-grid">
-      
-      <div class="card card-sales">
-        <h3 class="card-title">Ventas Totales</h3>
-        <p class="card-value">
-          {{ resumen().totalVentasRealizadas }}
-        </p>
-      </div>
+@if (resumen()) {
 
-      <div class="card card-income">
-        <h3 class="card-title">Ingresos</h3>
-        <p class="card-value">
-          {{ resumen().ingresosTotales | currency }}
-        </p>
+  <!-- Fila superior: 3 cards + gráfico ingresos -->
+  <div class="top-grid">
+
+    <!-- Card Ventas Totales -->
+    <div class="stat-card stat-blue">
+      <div class="stat-icon">
+        <span class="material-icons">point_of_sale</span>
       </div>
-      
+      <div class="stat-info">
+        <span class="stat-label">Ventas Totales</span>
+        <span class="stat-value">{{ resumen().totalVentasRealizadas }}</span>
+      </div>
     </div>
 
-    <div class="featured-product-box">
-      <h3 class="featured-title">
-        <span class="material-icons estrella">star</span>
-        Producto más vendido
+    <!-- Card Producto Más Vendido -->
+    <div class="stat-card stat-green">
+      <div class="stat-icon">
+        <span class="material-icons">star</span>
+      </div>
+      <div class="stat-info">
+        <span class="stat-label">Producto Más Vendido</span>
+        <span class="stat-value stat-value--sm">{{ resumen().productoMasVendido }}</span>
+        <span class="stat-sub">{{ resumen().unidadesDelProductoMasVendido }} unidades</span>
+      </div>
+    </div>
+
+<!-- Card Ingresos -->
+<div class="chart-card stat-card-wide">
+  <div class="stat-icon-green">
+    <span class="material-icons">attach_money</span>
+  </div>
+  <span class="stat-label-dark">Ingresos Totales</span>
+  <span class="ingresos-value">{{ resumen().ingresosTotales | currency }}</span>
+</div>
+
+  </div>
+
+  <!-- Fila inferior: gráficos -->
+  <div class="charts-grid">
+
+    <div class="chart-card">
+      <h3 class="chart-title">
+        <span class="material-icons">bar_chart</span>
+        Ventas por Mes
       </h3>
-      <p class="featured-text">
-        <strong>{{ resumen().productoMasVendido }}</strong> 
-        con <span class="highlight-text">{{ resumen().unidadesDelProductoMasVendido }}</span> unidades.
-      </p>
+      <div class="chart-wrapper">
+        <p-chart
+          *ngIf="chartVentasPorMes()"
+          type="line"
+          [data]="chartVentasPorMes()"
+          [options]="chartOptions"
+        />
+      </div>
     </div>
 
-
-  } @else {
-    <div class="loading-box">
-      <p>Cargando estadísticas del servidor...</p>
+    <div class="chart-card">
+      <h3 class="chart-title">
+        <span class="material-icons">emoji_nature</span>
+        Top 5 Productos Más Vendidos
+      </h3>
+      <div class="chart-wrapper">
+        <p-chart
+          *ngIf="chartTopProductos()"
+          type="bar"
+          [data]="chartTopProductos()"
+          [options]="chartOptionsBar"
+        />
+      </div>
     </div>
-  }
+
+  </div>
+
+} @else {
+  <div class="loading-box">
+    <p>Cargando estadísticas del servidor...</p>
+  </div>
+}

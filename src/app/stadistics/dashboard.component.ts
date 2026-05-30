@@ -1,41 +1,111 @@
 import { Component, inject, signal, afterNextRender } from '@angular/core';
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import { EstadisticasService } from '../services/stadistics.service';
+import { ChartModule } from 'primeng/chart';
 
+const MESES = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun',
+                'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, CurrencyPipe], // Importante para usar *ngIf y pipes
+  imports: [CommonModule, CurrencyPipe, ChartModule],
   templateUrl: 'dashboard.component.html',
   styleUrl: 'dashboard.component.css'
 })
 export class DashboardComponent {
-// Inyectamos los servicios
   private statsService = inject(EstadisticasService);
-  
-  
-  // Signal para los datos del dashboard
+
   resumen = signal<any>(null);
+  chartVentasPorMes = signal<any>(null);
+  chartTopProductos = signal<any>(null);
+
+  chartOptions = {
+    plugins: {
+      legend: { display: false }
+    },
+    responsive: true,
+    maintainAspectRatio: false,
+  };
+
+  chartOptionsBar = {
+    indexAxis: 'y',  // barras horizontales
+    plugins: {
+      legend: { display: false }
+    },
+    responsive: true,
+    maintainAspectRatio: false,
+  };
+
+chartIngresos = signal<any>(null);
+
+chartOptionsDoughnut = {
+  cutout: '75%',
+  plugins: {
+    legend: { display: false },
+    tooltip: { enabled: false }
+  },
+  responsive: true,
+  maintainAspectRatio: false,
+};
   constructor() {
-    // 3. Este bloque SOLO se ejecuta en el navegador del cliente.
-    // Evita el error "localStorage is not defined" durante el renderizado de servidor.
     afterNextRender(() => {
       const token = localStorage.getItem('token');
       if (token) {
-        this.obtenerEstadisticas(token);
-      } else {
-        console.warn('No se encontró un token en el almacenamiento local.');
+        this.obtenerEstadisticas();
       }
     });
   }
 
-  obtenerEstadisticas(token: string) {
+  obtenerEstadisticas() {
 this.statsService.getResumen().subscribe({
+  next: (data) => {
+    this.resumen.set(data);
+    // Gráfico doughnut de ingresos (visual decorativo)
+    this.chartIngresos.set({
+      labels: ['Ingresos'],
+      datasets: [{
+        data: [data.ingresosTotales, data.ingresosTotales * 0.3],
+        backgroundColor: ['#66BB6A', '#e8f5e9'],
+        borderWidth: 0,
+      }]
+    });
+  },
+  error: (err) => console.error('Error cargando resumen', err)
+});
+
+    this.statsService.getVentasPorMes().subscribe({
       next: (data) => {
-        this.resumen.set(data);
+        this.chartVentasPorMes.set({
+          labels: data.map(d => `${MESES[d.mes - 1]} ${d.anio}`),
+          datasets: [{
+            label: 'Ventas',
+            data: data.map(d => d.cantidad),
+            backgroundColor: '#42A5F5',
+            borderColor: '#1E88E5',
+            borderWidth: 2,
+            fill: true,
+            tension: 0.4,
+          }]
+        });
       },
-      error: (err) => console.error('Error cargando estadísticas', err)
+      error: (err) => console.error('Error cargando ventas por mes', err)
+    });
+
+    this.statsService.getTopProductos().subscribe({
+      next: (data) => {
+        this.chartTopProductos.set({
+          labels: data.map(d => d.nombre),
+          datasets: [{
+            label: 'Unidades',
+            data: data.map(d => d.cantidad),
+            backgroundColor: [
+              '#66BB6A', '#42A5F5', '#FFA726', '#AB47BC', '#26C6DA'
+            ],
+          }]
+        });
+      },
+      error: (err) => console.error('Error cargando top productos', err)
     });
   }
 }
