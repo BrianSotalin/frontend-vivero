@@ -54,6 +54,9 @@ h2 {
 }
 
 @media (max-width: 768px) {
+    .container h2{
+    font-size: 20px;
+  }
   .table-caption {
     flex-direction: column;
     align-items: stretch;
