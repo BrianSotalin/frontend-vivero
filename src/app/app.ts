@@ -4,11 +4,13 @@ import { CommonModule , isPlatformBrowser} from '@angular/common';
 import { ToastService } from './services/toast.service';
 import { AuthService } from './services/auth.service';
 import { filter } from 'rxjs';
+import { ButtonModule } from 'primeng/button';
+import { AuthRoleService } from './services/auth-role.service';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, CommonModule],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, CommonModule, ButtonModule],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
@@ -17,6 +19,7 @@ export class App {
   private authService = inject(AuthService);
   private router = inject(Router);
   private platformId = inject(PLATFORM_ID);
+  authRoleService = inject(AuthRoleService);
 
   username = signal<string>('Usuario');
   toast = signal<{show: boolean, message: string}>({ show: false, message: '' });

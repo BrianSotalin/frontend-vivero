@@ -32,12 +32,19 @@ onLogin() {
       localStorage.setItem('token', response.token); 
       localStorage.setItem('username', this.credentials.username);
 
-      this.toastService.show(`¡Bienvenido/a, ${this.credentials.username}! 🌿`);
-      // Redirigimos a la ruta del dashboard
-      this.router.navigate(['/dashboard']);
+      this.toastService.show(`¡Bienvenido/a, ${this.credentials.username}! `);
+ // Redirige según el rol
+  const payload = JSON.parse(atob(response.token.split('.')[1]));
+  const rol = payload.rol;
+
+  if (rol === 'EMPLOYEE') {
+    this.router.navigate(['/ventas']);
+  } else {
+    this.router.navigate(['/dashboard']);
+  }
     },
     error: (err) => {
-        this.toastService.show("Error: Credenciales incorrectas ❌");
+        this.toastService.show("Error: Credenciales incorrectas ");
       }
   });
 }

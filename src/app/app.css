@@ -148,6 +148,8 @@
   cursor: pointer;
   box-shadow: 0 2px 8px rgba(0,0,0,0.2);
 }
+
+
 /* --- ESTILOS MÓVIL (Menos de 768px) --- */
 @media (max-width: 768px) {
   .mobile-menu-btn {

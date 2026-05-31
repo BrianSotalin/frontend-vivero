@@ -14,17 +14,20 @@
     </div>
 
     <nav class="sidebar-nav">
+        <!-- ADMIN y USER -->
+  @if (authRoleService.hasAnyRole('ADMIN', 'USER')) {
       <!-- Usamos routerLinkActive para que el botón se ilumine cuando estés en esa página -->
       <button routerLink="/dashboard" routerLinkActive="active" class="nav-item">
         <span class="material-icons">dashboard</span> Panel Principal
       </button>
-      
+    }
+      <!-- Todos -->
       <button routerLink="/ventas" routerLinkActive="active" class="nav-item btn-highlight">
         <span class="material-icons">point_of_sale</span> Ventas
       </button>
 
       <hr class="nav-divider">
-
+  @if (authRoleService.hasAnyRole('ADMIN', 'USER')) {
       <button routerLink="/productos" routerLinkActive="active" class="nav-item">
         <span class="material-icons">inventory_2</span> Productos
       </button>
@@ -32,10 +35,13 @@
       <button routerLink="/clientes" routerLinkActive="active" class="nav-item">
         <span class="material-icons">group</span> Clientes
       </button>
-      
+    }
+      <!-- Solo ADMIN -->
+  @if (authRoleService.isAdmin()) {
       <button routerLink="/usuarios" routerLinkActive="active" class="nav-item">
         <span class="material-icons">key</span> Usuarios
       </button>
+    }
     </nav>
 
     <footer class="sidebar-footer">

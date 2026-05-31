@@ -16,32 +16,74 @@ import { SalesListComponent } from './sales/sales-list/sales-list.component';
 import { SalesDetailComponent } from './sales/sales-detail/sales-detail.component';
 import { SalesCreateComponent } from './sales/sales-create/sales-create.component';
 import { SalesEditComponent } from './sales/sales-edit/sales-edit.component';
+import { roleGuard } from './guards/role.guard';
 
 export const routes: Routes = [
-  { path: 'login', component: LoginComponent},
-  { path: 'dashboard', 
-    component: DashboardComponent ,
-    canActivate: [authGuard]
-  },
-  /*Rutas protegidas para productos, solo accesibles si el usuario está autenticado*/
-  { path: 'productos', component: ProductListComponent, canActivate: [authGuard] },
-  { path: 'productos/nuevo', component: ProductFormComponent, canActivate: [authGuard]},
-  { path: 'productos/editar/:id', component: ProductEditComponent, canActivate: [authGuard] },
-  /*Rutas protegidas para clientes, solo accesibles si el usuario está autenticado*/
-  { path: 'clientes', component: ClientListComponent, canActivate: [authGuard] },
-  { path: 'clientes/nuevo', component: ClienteCreateComponent, canActivate: [authGuard] },
-  { path: 'clientes/editar/:id', component: ClienteEditComponent, canActivate: [authGuard] },
-  /*Rutas protegidas para usuarios, solo accesibles si el usuario autenticado tiene rol ADMIN*/
-  { path: 'usuarios', component: UsuarioListComponent, canActivate: [authGuard] },
-  { path: 'usuarios/nuevo', component: UsuarioCreateComponent, canActivate: [authGuard] },
-  { path: 'usuarios/editar/:id', component: UsuarioEditComponent, canActivate: [authGuard] },
-  /*Rutas protegidas para ventas, solo accesibles si el usuario está autenticado*/
-  { path: 'ventas', component: SalesListComponent, canActivate: [authGuard] },
-    { path: 'ventas/nueva', component: SalesCreateComponent, canActivate: [authGuard] },
-  { path: 'ventas/:id', component: SalesDetailComponent, canActivate: [authGuard] },
-  { path: 'ventas/editar/:id', component: SalesEditComponent, canActivate: [authGuard] },
-  /* Ruta para mostrar error de acceso no autorizado */
+  { path: 'login', component: LoginComponent },
   { path: 'unauthorized', component: UnauthorizedComponent },
-  { path: '',redirectTo: 'login', pathMatch: 'full' },
+
+  // ADMIN y USER
+  { path: 'dashboard', component: DashboardComponent,
+    canActivate: [authGuard, roleGuard],
+    data: { roles: ['ADMIN', 'USER'] }
+  },
+  { path: 'productos', component: ProductListComponent,
+    canActivate: [authGuard, roleGuard],
+    data: { roles: ['ADMIN', 'USER'] }
+  },
+  { path: 'productos/nuevo', component: ProductFormComponent,
+    canActivate: [authGuard, roleGuard],
+    data: { roles: ['ADMIN', 'USER'] }
+  },
+  { path: 'productos/editar/:id', component: ProductEditComponent,
+    canActivate: [authGuard, roleGuard],
+    data: { roles: ['ADMIN', 'USER'] }
+  },
+  { path: 'clientes', component: ClientListComponent,
+    canActivate: [authGuard, roleGuard],
+    data: { roles: ['ADMIN', 'USER'] }
+  },
+  { path: 'clientes/nuevo', component: ClienteCreateComponent,
+    canActivate: [authGuard, roleGuard],
+    data: { roles: ['ADMIN', 'USER'] }
+  },
+  { path: 'clientes/editar/:id', component: ClienteEditComponent,
+    canActivate: [authGuard, roleGuard],
+    data: { roles: ['ADMIN', 'USER'] }
+  },
+
+  // Solo ADMIN
+  { path: 'usuarios', component: UsuarioListComponent,
+    canActivate: [authGuard, roleGuard],
+    data: { roles: ['ADMIN'] }
+  },
+  { path: 'usuarios/nuevo', component: UsuarioCreateComponent,
+    canActivate: [authGuard, roleGuard],
+    data: { roles: ['ADMIN'] }
+  },
+  { path: 'usuarios/editar/:id', component: UsuarioEditComponent,
+    canActivate: [authGuard, roleGuard],
+    data: { roles: ['ADMIN'] }
+  },
+
+  // Todos los roles
+  { path: 'ventas', component: SalesListComponent,
+    canActivate: [authGuard, roleGuard],
+    data: { roles: ['ADMIN', 'USER', 'EMPLOYEE'] }
+  },
+  { path: 'ventas/nueva', component: SalesCreateComponent,
+    canActivate: [authGuard, roleGuard],
+    data: { roles: ['ADMIN', 'USER', 'EMPLOYEE'] }
+  },
+  { path: 'ventas/:id', component: SalesDetailComponent,
+    canActivate: [authGuard, roleGuard],
+    data: { roles: ['ADMIN', 'USER', 'EMPLOYEE'] }
+  },
+  { path: 'ventas/editar/:id', component: SalesEditComponent,
+    canActivate: [authGuard, roleGuard],
+    data: { roles: ['ADMIN', 'USER', 'EMPLOYEE'] }
+  },
+
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: '**', redirectTo: 'login' }
 ];
