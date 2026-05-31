@@ -13,3 +13,24 @@
   display: flex;
   gap: 1rem;
 }
+
+/* Cards */
+.p-card {
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 8px !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+}
+
+.p-card .p-card-title {
+  font-size: 1.05rem !important;
+  font-weight: 600 !important;
+  color: #334155 !important;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.p-card .p-card-body {
+  padding: 20px !important;
+}

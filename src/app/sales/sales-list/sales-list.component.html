@@ -40,7 +40,7 @@
     <ng-template pTemplate="header">
       <tr>
         <th pSortableColumn="codigo">Comprobante <p-sortIcon field="codigo" /></th>
-        <th pSortableColumn="fecha">Fecha / Hora <p-sortIcon field="fecha" /></th>
+        <th pSortableColumn="fecha">Fecha<p-sortIcon field="fecha" /></th>
         <th>Cliente</th>
         <th pSortableColumn="total">Total <p-sortIcon field="total" /></th>
         <th pSortableColumn="estado">Estado <p-sortIcon field="estado" /></th>
@@ -51,7 +51,7 @@
     <ng-template pTemplate="body" let-venta>
       <tr>
         <td><span class="badge-code">{{ venta.codigo }}</span></td>
-        <td>{{ venta.fecha | date:'dd/MM/yyyy HH:mm' }}</td>
+        <td>{{ venta.fecha | date:'dd/MM/yyyy' }}</td>
         <td>{{ venta.cliente ? venta.cliente.nombre : 'Consumidor Final' }}</td>
         <td><b>${{ venta.total | number:'1.2-2' }}</b></td>
         <td>

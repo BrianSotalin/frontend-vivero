@@ -1,14 +1,16 @@
 <div class="table-container">
-  
+
   <div class="detail-header">
     <h2>
-      <span class="material-icons icon-main">receipt</span>
+      <span class="material-icons icon-main">list</span>
       Detalle de Venta: <span class="code-text">{{ venta()?.codigo }}</span>
     </h2>
-    <button routerLink="/ventas" class="btn-back">
-      <span class="material-icons">arrow_back</span>
-      Volver al Historial
-    </button>
+    <p-button
+      label="Volver al Historial"
+      icon="pi pi-arrow-left"
+      severity="secondary"
+      routerLink="/ventas"
+    />
   </div>
 
   <div *ngIf="!venta()" class="loading-container">
@@ -17,33 +19,32 @@
   </div>
 
   <div *ngIf="venta()" class="main-card">
-    
+
     <div class="info-grid">
       <div class="info-item">
         <span class="info-label">Fecha de Emisión</span>
-        <strong class="info-value">{{ venta()?.fecha | date:'dd/MM/yyyy HH:mm' }}</strong>
+        <strong class="info-value">{{ venta()?.fecha | date:'dd/MM/yyyy' }}</strong>
       </div>
-      
+
       <div class="info-item">
         <span class="info-label">Estado de Transacción</span>
-        <span class="badge-status" 
-              [ngClass]="{
-                'status-paid': venta()?.estado === 0,
-                'status-debt': venta()?.estado === 1,
-                'status-pending': venta()?.estado === 2
-              }">
-          {{ venta()?.estado === 0 ? 'PAGADO' : venta()?.estado === 1 ? 'DEUDA' : 'ABONADO' }}
-        </span>
+        <p-tag
+          [value]="textosEstado[venta()?.estado]"
+          [severity]="severidadEstado[venta()?.estado]"
+        />
       </div>
-      
+
       <div class="info-item">
         <span class="info-label">Datos del Cliente</span>
-        <strong class="info-value">
-          {{ venta()?.cliente ? venta()?.cliente?.nombre : '👤 Consumidor Final' }}
-        </strong>
+  <div class="info-value-row">
+    <span class="material-icons">person</span>
+    <strong class="info-value">
+      {{ venta()?.cliente ? venta()?.cliente?.nombre : 'Consumidor Final' }}
+    </strong>
+  </div>
         <small *ngIf="venta()?.cliente" class="client-phone">
           <span class="material-icons">phone</span>
-          <span>{{ venta()?.cliente?.telefono || 'Sin teléfono' }}</span>
+          {{ venta()?.cliente?.telefono || 'Sin teléfono' }}
         </small>
       </div>
     </div>
@@ -52,7 +53,7 @@
       <span class="material-icons">shopping_bag</span>
       Artículos adquiridos
     </h3>
-    
+
     <table class="items-table">
       <thead>
         <tr>
@@ -66,55 +67,47 @@
         <tr *ngFor="let item of venta()?.detalles">
           <td>
             <div class="product-name">{{ item.producto.producto }}</div>
-      
           </td>
-          <td class="text-center text-bold quantity-cell">
-            {{ item.cantidad }}
-          </td>
-          <td class="text-right price-cell">
-            ${{ item.precio | number:'1.2-2' }}
-          </td>
+          <td class="text-center text-bold quantity-cell">{{ item.cantidad }}</td>
+          <td class="text-right price-cell">${{ item.precio | number:'1.2-2' }}</td>
           <td class="text-right text-bold subtotal-cell">
             ${{ (item.cantidad * item.precio) | number:'1.2-2' }}
           </td>
         </tr>
-        
+
         <tr *ngIf="!venta()?.detalles || venta()?.detalles?.length === 0">
           <td colspan="4" class="empty-row">
-            No hay productos registrados en el detalle de esta venta.
+            No hay productos registrados en esta venta.
           </td>
         </tr>
       </tbody>
     </table>
 
-<div class="total-section">
-  <div class="total-box">
-    @if (venta()?.abono > 0) {
-    <!-- Fila de Abono -->
-    <div class="total-row">
-      <span class="total-label">Abono:</span>
-      <span class="abono-amount">${{ venta()?.abono | number:'1.2-2' }}</span>
-    </div>
-  }
-    <!-- Fila de Total Neto -->
-    <div class="total-row">
-      <span class="total-label">Total Neto:</span>
-      <span class="total-amount">${{ venta()?.total | number:'1.2-2' }}</span>
-    </div>
+    <div class="total-section">
+      <div class="total-box">
 
-    @if (venta()?.abono > 0 || venta()?.estado === 1) {
-    <!-- Separador visual opcional -->
-    <hr class="total-divider">
+        @if (venta()?.abono > 0) {
+          <div class="total-row">
+            <span class="total-label">Abono:</span>
+            <span class="abono-amount">${{ venta()?.abono | number:'1.2-2' }}</span>
+          </div>
+        }
 
-    <!-- Fila del Saldo Restante -->
-    <div class="total-row pendiente">
-      <span class="total-label">Saldo Pendiente:</span>
-      <span class="pendiente-amount">${{ saldoPendiente() | number:'1.2-2' }}</span>
+        <div class="total-row">
+          <span class="total-label">Total Neto:</span>
+          <span class="total-amount">${{ venta()?.total | number:'1.2-2' }}</span>
+        </div>
+
+        @if (venta()?.abono > 0 || venta()?.estado === 1) {
+          <hr class="total-divider">
+          <div class="total-row">
+            <span class="total-label">Saldo Pendiente:</span>
+            <span class="pendiente-amount">${{ saldoPendiente() | number:'1.2-2' }}</span>
+          </div>
+        }
+
+      </div>
     </div>
-  }
-  </div>
-</div>
-
 
   </div>
 </div>

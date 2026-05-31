@@ -351,3 +351,39 @@
   cursor: not-allowed;
   box-shadow: none;
 }
+.card-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+:host ::ng-deep .btn-submit-prime {
+  width: 100%;
+  justify-content: center;
+  background: #2e7d32 !important;
+  border-color: #2e7d32 !important;
+  font-size: 1rem;
+  padding: 14px;
+}
+
+:host ::ng-deep .btn-submit-prime:hover:not(:disabled) {
+  background: #236127 !important;
+}
+@media (max-width: 768px) {
+    .main-grid {
+    grid-template-columns: 1fr;
+  }
+  .header-container {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+    .header-container p-button {
+    width: 100%;
+  }
+
+  :host ::ng-deep .header-container .p-button {
+    width: 100%;
+    justify-content: center;
+  }
+}

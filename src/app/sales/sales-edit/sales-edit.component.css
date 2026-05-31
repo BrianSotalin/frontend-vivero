@@ -152,4 +152,17 @@ h2 {
   .main-grid {
     grid-template-columns: 1fr;
   }
+    .header-container {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+    .header-container p-button {
+    width: 100%;
+  }
+
+  :host ::ng-deep .header-container .p-button {
+    width: 100%;
+    justify-content: center;
+  }
 }
