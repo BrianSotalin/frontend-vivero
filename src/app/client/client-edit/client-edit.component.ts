@@ -4,38 +4,42 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ClientService } from '../../services/client.service';
 
+// PrimeNG
+import { ButtonModule } from 'primeng/button';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
+
 @Component({
   selector: 'app-cliente-edit',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink, ButtonModule, ToastModule],
+  providers: [MessageService],
   templateUrl: './client-edit.component.html',
-  styleUrls: ['./client-edit.component.css'] // Reutiliza el CSS que acabamos de crear para mantener el diseño
+  styleUrls: ['./client-edit.component.css']
 })
 export class ClienteEditComponent implements OnInit {
   private clienteService = inject(ClientService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private cdr = inject(ChangeDetectorRef);
+  private messageService = inject(MessageService);
 
   clienteId!: number;
   clienteEnEdicion: any = { nombre: '', telefono: '', email: '' };
-  datosOriginales: any; // Aquí guardamos el clon para la comparación parcial estilo Postman
+  datosOriginales: any;
 
   ngOnInit() {
-    // Capturamos el ID del cliente desde la URL
     this.clienteId = Number(this.route.snapshot.paramMap.get('id'));
-
     if (this.clienteId) {
       this.clienteService.getClienteById(this.clienteId).subscribe({
         next: (data) => {
           this.clienteEnEdicion = data;
-          this.datosOriginales = { ...data }; // Guardamos una copia exacta inicial de la BD
+          this.datosOriginales = { ...data };
           this.cdr.detectChanges();
         },
-        error: (err) => {
-          console.error('Error al recuperar datos del cliente:', err);
-          alert('No se pudo cargar la información del cliente.');
-          this.router.navigate(['/clientes']);
+        error: () => {
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudo cargar la información del cliente.' });
+          setTimeout(() => this.router.navigate(['/clientes']), 1500);
         }
       });
     }
@@ -44,38 +48,28 @@ export class ClienteEditComponent implements OnInit {
   actualizar(formulario: NgForm) {
     if (formulario.invalid) return;
 
-    // Creamos un objeto vacío donde solo meteremos lo que realmente cambió
     const camposModificados: any = {};
 
-    // Comparamos campo por campo contra los datos originales
-    if (this.clienteEnEdicion.nombre !== this.datosOriginales.nombre) {
+    if (this.clienteEnEdicion.nombre !== this.datosOriginales.nombre)
       camposModificados.nombre = this.clienteEnEdicion.nombre;
-    }
-    if (this.clienteEnEdicion.telefono !== this.datosOriginales.telefono) {
+    if (this.clienteEnEdicion.telefono !== this.datosOriginales.telefono)
       camposModificados.telefono = this.clienteEnEdicion.telefono;
-    }
-    if (this.clienteEnEdicion.email !== this.datosOriginales.email) {
+    if (this.clienteEnEdicion.email !== this.datosOriginales.email)
       camposModificados.email = this.clienteEnEdicion.email;
-    }
 
-    // Si el usuario no modificó nada, no hacemos la petición HTTP y volvemos
     if (Object.keys(camposModificados).length === 0) {
-      alert('No has realizado ningún cambio.');
-      this.router.navigate(['/clientes']);
+      this.messageService.add({ severity: 'info', summary: 'Sin cambios', detail: 'No has realizado ningún cambio.' });
+      setTimeout(() => this.router.navigate(['/clientes']), 1500);
       return;
     }
 
-    console.log('Enviando cambios parciales al PATCH de Java:', camposModificados);
-
-    // Enviamos el PATCH con los datos filtrados
     this.clienteService.updateCliente(this.clienteId, camposModificados).subscribe({
       next: () => {
-        alert('¡Cliente actualizado con éxito!');
-        this.router.navigate(['/clientes']);
+        this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'Cliente actualizado con éxito.' });
+        setTimeout(() => this.router.navigate(['/clientes']), 1500);
       },
       error: (err) => {
-        console.error('Error al actualizar cliente:', err);
-        alert(`Error al actualizar el cliente: ${err.message}${err.error ? ' - ' + JSON.stringify(err.error) : ''}`);
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error?.message || 'Error al actualizar el cliente.' });
       }
     });
   }

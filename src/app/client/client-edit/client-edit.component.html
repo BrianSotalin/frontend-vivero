@@ -1,20 +1,22 @@
+<p-toast />
+
 <div class="form-wrapper">
   <div class="form-card">
     <h2>
-        <span class="material-icons icono-editar">edit</span>
-        Editar Cliente
+      <span class="material-icons icono-editar">edit</span>
+      Editar Cliente
     </h2>
-    
+
     <form #miFormulario="ngForm" (ngSubmit)="actualizar(miFormulario)">
-      
+
       <div class="input-group">
         <label for="nombre">Nombre Completo</label>
-        <input 
-          type="text" 
+        <input
+          type="text"
           id="nombre"
-          [(ngModel)]="clienteEnEdicion.nombre" 
-          name="nombre" 
-          required 
+          [(ngModel)]="clienteEnEdicion.nombre"
+          name="nombre"
+          required
           minlength="3"
           #nomInput="ngModel"
           placeholder="Ej. Juan Pérez"
@@ -24,25 +26,25 @@
           <span *ngIf="nomInput.errors?.['minlength']">Debe tener al menos 3 caracteres.</span>
         </span>
       </div>
-      
+
       <div class="input-group">
         <label for="telefono">Teléfono</label>
-        <input 
-          type="tel" 
+        <input
+          type="tel"
           id="telefono"
-          [(ngModel)]="clienteEnEdicion.telefono" 
-          name="telefono" 
+          [(ngModel)]="clienteEnEdicion.telefono"
+          name="telefono"
           placeholder="Ej. 0998765432"
         />
       </div>
 
       <div class="input-group">
         <label for="email">Correo Electrónico</label>
-        <input 
-          type="email" 
+        <input
+          type="email"
           id="email"
-          [(ngModel)]="clienteEnEdicion.email" 
-          name="email" 
+          [(ngModel)]="clienteEnEdicion.email"
+          name="email"
           email
           #emailInput="ngModel"
           placeholder="Ej. juan.perez@email.com"
@@ -53,20 +55,20 @@
       </div>
 
       <div class="actions">
-        <button 
-          type="submit" 
-          class="btn-save" 
+        <p-button
+          type="submit"
+          label="Guardar Cambios"
+          icon="pi pi-check"
           [disabled]="miFormulario.invalid"
-        >
-          Guardar Cambios
-        </button>
-        <button 
-          type="button" 
-          routerLink="/clientes" 
-          class="btn-cancel"
-        >
-          Cancelar
-        </button>
+          styleClass="btn-save-prime"
+        />
+        <p-button
+          type="button"
+          label="Cancelar"
+          severity="secondary"
+          routerLink="/clientes"
+          styleClass="btn-cancel-prime"
+        />
       </div>
 
     </form>

@@ -1,17 +1,19 @@
+<p-toast />
+
 <div class="form-wrapper">
   <div class="form-card">
-    <h2> Nuevo Cliente</h2>
-    
+    <h2>Nuevo Cliente</h2>
+
     <form #miFormulario="ngForm" (ngSubmit)="guardar(miFormulario)">
-      
+
       <div class="input-group">
         <label for="nombre">Nombre Completo</label>
-        <input 
-          type="text" 
+        <input
+          type="text"
           id="nombre"
-          [(ngModel)]="nuevoCliente.nombre" 
-          name="nombre" 
-          required 
+          [(ngModel)]="nuevoCliente.nombre"
+          name="nombre"
+          required
           minlength="3"
           #nomInput="ngModel"
           placeholder="Ej. Juan Pérez"
@@ -21,26 +23,25 @@
           <span *ngIf="nomInput.errors?.['minlength']">Debe tener al menos 3 caracteres.</span>
         </span>
       </div>
-      
+
       <div class="input-group">
         <label for="telefono">Teléfono</label>
-        <input 
-          type="tel" 
+        <input
+          type="tel"
           id="telefono"
-          [(ngModel)]="nuevoCliente.telefono" 
-          name="telefono" 
-          #telInput="ngModel"
+          [(ngModel)]="nuevoCliente.telefono"
+          name="telefono"
           placeholder="Ej. 0998765432"
         />
       </div>
 
       <div class="input-group">
         <label for="email">Correo Electrónico</label>
-        <input 
-          type="email" 
+        <input
+          type="email"
           id="email"
-          [(ngModel)]="nuevoCliente.email" 
-          name="email" 
+          [(ngModel)]="nuevoCliente.email"
+          name="email"
           email
           #emailInput="ngModel"
           placeholder="Ej. juan.perez@email.com"
@@ -51,20 +52,20 @@
       </div>
 
       <div class="actions">
-        <button 
-          type="submit" 
-          class="btn-save" 
+        <p-button
+          type="submit"
+          label="Guardar Cliente"
+          icon="pi pi-check"
           [disabled]="miFormulario.invalid"
-        >
-          Guardar Cliente
-        </button>
-        <button 
-          type="button" 
-          routerLink="/clientes" 
-          class="btn-cancel"
-        >
-          Cancelar
-        </button>
+          styleClass="btn-save-prime"
+        />
+        <p-button
+          type="button"
+          label="Cancelar"
+          severity="secondary"
+          routerLink="/clientes"
+          styleClass="btn-cancel-prime"
+        />
       </div>
 
     </form>

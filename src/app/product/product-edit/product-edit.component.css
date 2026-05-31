@@ -129,8 +129,6 @@ input.ng-invalid.ng-touched, select.ng-invalid.ng-touched {
   background: #1565c0 !important;
 }
 
-
-
 :host ::ng-deep .actions .p-button {
   width: 100%;
   justify-content: center;

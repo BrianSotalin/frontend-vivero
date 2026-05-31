@@ -4,18 +4,24 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { ClientService } from '../../services/client.service';
 
+// PrimeNG
+import { ButtonModule } from 'primeng/button';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
+
 @Component({
   selector: 'app-cliente-create',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink, ButtonModule, ToastModule],
+  providers: [MessageService],
   templateUrl: './client-create.component.html',
-  styleUrls: ['./client-create.component.css'] // Reutiliza el CSS de tus formularios
+  styleUrls: ['./client-create.component.css']
 })
 export class ClienteCreateComponent {
   private clienteService = inject(ClientService);
   private router = inject(Router);
+  private messageService = inject(MessageService);
 
-  // Estructura limpia que coincide con tu entidad de Java
   nuevoCliente = {
     nombre: '',
     telefono: '',
@@ -23,22 +29,19 @@ export class ClienteCreateComponent {
   };
 
   guardar(formulario: NgForm) {
-    // Si el HTML detecta un error de validación, detenemos el envío
     if (formulario.invalid) return;
 
     this.clienteService.createCliente(this.nuevoCliente).subscribe({
       next: () => {
-        alert('¡Cliente registrado con éxito!');
-        this.router.navigate(['/clientes']); // Redirige al listado de clientes
+        this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'Cliente registrado con éxito.' });
+        setTimeout(() => this.router.navigate(['/clientes']), 1500);
       },
       error: (err) => {
-        console.error('Error al crear cliente:', err);
-        // Si tu Spring Boot devuelve un error de validación @Valid (400)
         if (err.status === 400 && err.error) {
-          const mensajes = Object.values(err.error).join('\n');
-          alert(`Error de validación:\n${mensajes}`);
+          const mensajes = Object.values(err.error).join(', ');
+          this.messageService.add({ severity: 'error', summary: 'Error de validación', detail: mensajes });
         } else {
-          alert('Ocurrió un error al guardar el cliente.');
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Ocurrió un error al guardar el cliente.' });
         }
       }
     });
