@@ -40,6 +40,15 @@ h2 {
   color: #888888;
   padding: 30px;
 }
+/* Ajustes para el campo de búsqueda en la tabla */
+:host ::ng-deep .table-caption .p-iconfield {
+  flex: 1;
+  max-width: 400px;
+}
+
+:host ::ng-deep .table-caption .p-iconfield input {
+  width: 100%;
+}
 
 @media (max-width: 768px) {
   .table-caption {
