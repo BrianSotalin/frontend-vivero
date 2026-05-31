@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, inject, OnInit,signal, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -23,6 +23,7 @@ export class UsuarioEditComponent implements OnInit {
   private router = inject(Router);
   private cdr = inject(ChangeDetectorRef);
   private messageService = inject(MessageService);
+  cargando = signal<boolean>(true);
 
   usuarioId!: number;
   usuarioEnEdicion: any = { password: '', rol: '', username: '' };
@@ -35,6 +36,7 @@ export class UsuarioEditComponent implements OnInit {
         next: (data) => {
           this.usuarioEnEdicion = data;
           this.datosOriginales = { ...data };
+          this.cargando.set(false);
           this.cdr.detectChanges();
         },
         error: () => {

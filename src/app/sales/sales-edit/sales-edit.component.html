@@ -1,5 +1,8 @@
 <p-toast />
-
+  <div *ngIf="!venta()" class="loading-container">
+    <span class="material-icons loading-spinner">cached</span>
+    <p>Cargando información de la venta...</p>
+  </div>
 <div class="container" *ngIf="venta()">
   <div class="header-container">
     <h2>
@@ -128,6 +131,3 @@
   </div>
 </div>
 
-<div *ngIf="!venta()" class="loading">
-  <p>Cargando venta...</p>
-</div>

@@ -1,7 +1,13 @@
 <p-toast />
 
 <div class="form-wrapper">
-  <div class="form-card">
+    <!-- Loading -->
+  <div *ngIf="cargando()" class="loading-container">
+    <span class="material-icons loading-spinner">cached</span>
+    <p>Cargando información del producto...</p>
+  </div>
+
+  <div class="form-card" *ngIf="!cargando()">
     <h2>
       <span class="material-icons icono-editar">edit</span>
       Editar Producto

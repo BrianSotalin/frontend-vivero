@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, inject, OnInit, signal, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Router, ActivatedRoute, RouterLink } from '@angular/router';
@@ -23,6 +23,7 @@ export class ProductEditComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private cdr = inject(ChangeDetectorRef);
   private messageService = inject(MessageService);
+  cargando = signal<boolean>(true);
 
   productoId!: number;
   datosOriginales: any;
@@ -40,6 +41,7 @@ export class ProductEditComponent implements OnInit {
       next: (data) => {
         this.productoEnEdicion = data;
         this.datosOriginales = { ...data };
+        this.cargando.set(false);
         this.cdr.detectChanges();
       },
       error: (err) => {

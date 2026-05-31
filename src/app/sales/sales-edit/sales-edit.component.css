@@ -27,7 +27,21 @@ h2 {
   gap: 20px;
   align-items: start;
 }
+/* Spinner de carga animado */
+.loading-container {
+  text-align: center;
+  padding: 40px;
+  color: #757575;
+}
 
+.loading-spinner {
+  font-size: 48px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  100% { transform: rotate(300deg); }
+}
 .forms-column {
   display: flex;
   flex-direction: column;
