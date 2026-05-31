@@ -1,18 +1,20 @@
+<p-toast />
+
 <div class="form-wrapper">
   <div class="form-card">
     <h2>
       <span class="material-icons icono-editar">edit</span>
       Editar Producto
     </h2>
-    
+
     <form #miFormulario="ngForm" (ngSubmit)="actualizar(miFormulario)">
-      
+
       <div class="input-group">
         <label>Nombre del Producto</label>
         <input type="text" [(ngModel)]="productoEnEdicion.producto" name="nombre" required #prodInput="ngModel">
         <span class="error-text" *ngIf="prodInput.invalid && prodInput.touched">El nombre es obligatorio</span>
       </div>
-      
+
       <div class="input-group">
         <label for="categoria">Categoría</label>
         <select id="categoria" [(ngModel)]="productoEnEdicion.categoria" name="categoria" required #catInput="ngModel">
@@ -23,7 +25,7 @@
         <span class="error-text" *ngIf="catInput.invalid && catInput.touched">La categoría es obligatoria</span>
       </div>
 
-      <div style="display: flex; gap: 10px;">
+      <div  class="input-price" >
         <div class="input-group">
           <label>P. Compra</label>
           <input type="number" [(ngModel)]="productoEnEdicion.precioCompra" name="pCompra" min="0" required #compraInput="ngModel">
@@ -37,11 +39,22 @@
       </div>
 
       <div class="actions">
-        <button type="submit" class="btn-save" [disabled]="miFormulario.invalid">
-          Guardar Cambios
-        </button>
-        <button type="button" routerLink="/productos" class="btn-cancel">Cancelar</button>
+        <p-button
+          type="submit"
+          label="Guardar Cambios"
+          icon="pi pi-check"
+          [disabled]="miFormulario.invalid"
+          styleClass="btn-save-prime"
+        />
+        <p-button
+          type="button"
+          label="Cancelar"
+          severity="secondary"
+          routerLink="/productos"
+          styleClass="btn-cancel-prime"
+        />
       </div>
+
     </form>
   </div>
 </div>

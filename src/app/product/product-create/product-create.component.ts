@@ -4,16 +4,23 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { ProductService } from '../../services/product.service';
 
+// PrimeNG
+import { ButtonModule } from 'primeng/button';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
+
 @Component({
   selector: 'app-product-form',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink, ButtonModule, ToastModule],
+  providers: [MessageService],
   templateUrl: './product-create.component.html',
   styleUrls: ['./product-create.component.css']
 })
 export class ProductFormComponent {
   private productService = inject(ProductService);
   private router = inject(Router);
+  private messageService = inject(MessageService);
 
   nuevoProducto = {
     producto: '',
@@ -23,30 +30,23 @@ export class ProductFormComponent {
   };
 
   guardar(formulario: NgForm) {
-    // Doble seguridad: Si el formulario es inválido, mostramos un aviso y no hacemos el POST
     if (formulario.invalid) {
-      alert('Por favor, rellena todos los campos correctamente.');
-      return; 
+      this.messageService.add({ severity: 'warn', summary: 'Atención', detail: 'Por favor, rellena todos los campos correctamente.' });
+      return;
     }
     this.productService.createProducto(this.nuevoProducto).subscribe({
       next: () => {
-        alert('Producto creado con éxito!');
-        this.router.navigate(['/productos']);
+        this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'Producto creado con éxito.' });
+        setTimeout(() => this.router.navigate(['/productos']), 1500);
       },
-     error: (err) => {
-      console.error('Error completo del servidor:', err);
-
-      // Si el backend devuelve un 400 (Bad Request), procesamos los mensajes de validación
-      if (err.status === 400 && err.error) {
-        // Como el GlobalExceptionHandler de Java devuelve un mapa { campo: mensaje }, 
-        // podemos extraer todos los mensajes de error y juntarlos
-        const mensajesDeError = Object.values(err.error).join('\n');
-        alert(`Error de validación:\n${mensajesDeError}`);
-      } else {
-        // Error genérico por si se cae el servidor o hay un problema de red
-        alert('Ocurrió un error inesperado al guardar el producto.');
+      error: (err) => {
+        if (err.status === 400 && err.error) {
+          const mensajes = Object.values(err.error).join(', ');
+          this.messageService.add({ severity: 'error', summary: 'Error de validación', detail: mensajes });
+        } else {
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Ocurrió un error inesperado al guardar el producto.' });
+        }
       }
-    }
     });
   }
 }
