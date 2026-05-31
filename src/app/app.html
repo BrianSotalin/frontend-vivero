@@ -57,13 +57,10 @@
   </aside>
   <!-- Fondo oscuro cuando el menú está abierto en móvil -->
 <div class="sidebar-overlay" *ngIf="isMenuOpen()" (click)="toggleMenu()"></div>
+
   <!-- 2. Zona dinámica: Aquí Angular inyectará tus componentes -->
   <main class="main-content">
     <router-outlet></router-outlet>
-    @if (toast().show) {
-  <div class="toast-notification">
-    {{ toast().message }}
-  </div>
-}
+
   </main>
 </div>

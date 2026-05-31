@@ -1,39 +1,35 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common'; // Para usar *ngIf
-import { FormsModule } from '@angular/forms';   // <--- ¡ESTA ES LA CLAVE!
+import { Component, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
-import { ToastService } from '../services/toast.service'; // Importamos el servicio de toast
+
+// PrimeNG
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-login',
-  standalone: true, // Verifica que esto sea true
-  imports: [
-    CommonModule, 
-    FormsModule  // <--- Debes agregarlo aquí en la lista de imports
-  ],
+  standalone: true,
+  imports: [CommonModule, FormsModule, ToastModule],
+  providers: [MessageService],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
 export class LoginComponent {
+  private authService = inject(AuthService);
+  private router = inject(Router);
+  private messageService = inject(MessageService);
+
   credentials = { username: '', password: '' };
-  errorMessage = '';
 
-constructor(
-    private authService: AuthService, 
-    private router: Router,
-    private toastService: ToastService // Inyectamos el servicio
-  ) {}
+  onLogin() {
+    this.authService.login(this.credentials).subscribe({
+next: (response) => {
+  localStorage.setItem('token', response.token);
+  localStorage.setItem('username', this.credentials.username);
+  localStorage.setItem('showWelcome', 'true'); 
 
-onLogin() {
-  this.authService.login(this.credentials).subscribe({
-    next: (response) => {
-      // Guardamos el token (ajusta 'token' según como lo devuelva tu API)
-      localStorage.setItem('token', response.token); 
-      localStorage.setItem('username', this.credentials.username);
-
-      this.toastService.show(`¡Bienvenido/a, ${this.credentials.username}! `);
- // Redirige según el rol
   const payload = JSON.parse(atob(response.token.split('.')[1]));
   const rol = payload.rol;
 
@@ -42,10 +38,14 @@ onLogin() {
   } else {
     this.router.navigate(['/dashboard']);
   }
-    },
-    error: (err) => {
-        this.toastService.show("Error: Credenciales incorrectas ");
+},
+      error: () => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Credenciales incorrectas.'
+        });
       }
-  });
-}
+    });
+  }
 }

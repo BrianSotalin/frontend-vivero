@@ -2,6 +2,8 @@ import { Component, inject, signal, afterNextRender } from '@angular/core';
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import { EstadisticasService } from '../services/stadistics.service';
 import { ChartModule } from 'primeng/chart';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
 
 const MESES = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun',
                 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
@@ -9,12 +11,14 @@ const MESES = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun',
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, CurrencyPipe, ChartModule],
+  imports: [CommonModule, CurrencyPipe, ChartModule, ToastModule],
+  providers: [MessageService],
   templateUrl: 'dashboard.component.html',
   styleUrl: 'dashboard.component.css'
 })
 export class DashboardComponent {
   private statsService = inject(EstadisticasService);
+  private messageService = inject(MessageService);
 
   resumen = signal<any>(null);
   chartVentasPorMes = signal<any>(null);
@@ -49,12 +53,24 @@ chartOptionsDoughnut = {
   maintainAspectRatio: false,
 };
   constructor() {
-    afterNextRender(() => {
-      const token = localStorage.getItem('token');
-      if (token) {
-        this.obtenerEstadisticas();
-      }
+afterNextRender(() => {
+  const token = localStorage.getItem('token');
+  if (token) {
+    this.obtenerEstadisticas();
+  }
+
+  // Muestra el toast de bienvenida si viene del login
+  const showWelcome = localStorage.getItem('showWelcome');
+  if (showWelcome === 'true') {
+    const username = localStorage.getItem('username') || 'Usuario';
+    this.messageService.add({
+      severity: 'success',
+      summary: 'Bienvenido',
+      detail: `¡Bienvenido/a, ${username}!`
     });
+    localStorage.removeItem('showWelcome');
+  }
+});
   }
 
   obtenerEstadisticas() {

@@ -55,9 +55,22 @@ export class SalesListComponent implements OnInit {
   2: 'warn',
 };
 
-  ngOnInit() {
-    this.cargarVentas();
+ngOnInit() {
+  this.cargarVentas();
+
+  const showWelcome = localStorage.getItem('showWelcome');
+  if (showWelcome === 'true') {
+    const username = localStorage.getItem('username') || 'Usuario';
+    setTimeout(() => {
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Bienvenido',
+        detail: `¡Bienvenido/a, ${username}!`
+      });
+    }, 300);
+    localStorage.removeItem('showWelcome');
   }
+}
 
   cargarVentas() {
     this.salesService.getSales().subscribe({
