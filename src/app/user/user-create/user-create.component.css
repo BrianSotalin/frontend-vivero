@@ -135,3 +135,23 @@ input.ng-invalid.ng-touched {
     background: #e0e0e0;
     color: #333;
 }
+:host ::ng-deep .btn-save-prime {
+  width: 100%;
+  justify-content: center;
+  background: #9c27b0 !important;
+  border-color: #9c27b0 !important;
+}
+
+:host ::ng-deep .btn-save-prime:hover:not(:disabled) {
+  background: #7b1fa2 !important;
+}
+
+:host ::ng-deep .btn-cancel-prime {
+  width: 100%;
+  justify-content: center;
+}
+
+:host ::ng-deep .form-actions .p-button {
+  width: 100%;
+  justify-content: center;
+}

@@ -1,19 +1,19 @@
+<p-toast />
+
 <div class="form-wrapper">
   <div class="form-card">
-    <h2>
-      Nuevo Usuario del Sistema
-    </h2>
-    
+    <h2>Nuevo Usuario del Sistema</h2>
+
     <form #miFormulario="ngForm" (ngSubmit)="guardar(miFormulario)">
-      
+
       <div class="input-group">
         <label for="username">Nombre de Usuario (Username)</label>
-        <input 
-          type="text" 
+        <input
+          type="text"
           id="username"
-          [(ngModel)]="nuevoUsuario.username" 
-          name="username" 
-          required 
+          [(ngModel)]="nuevoUsuario.username"
+          name="username"
+          required
           minlength="4"
           #userInput="ngModel"
           placeholder="Ej. admin_vivero"
@@ -23,14 +23,14 @@
           <small *ngIf="userInput.errors?.['minlength']">Mínimo 4 caracteres.</small>
         </div>
       </div>
-      
+
       <div class="input-group">
         <label for="password">Contraseña</label>
-        <input 
-          type="password" 
+        <input
+          type="password"
           id="password"
-          [(ngModel)]="nuevoUsuario.password" 
-          name="password" 
+          [(ngModel)]="nuevoUsuario.password"
+          name="password"
           required
           minlength="6"
           #passInput="ngModel"
@@ -52,12 +52,20 @@
       </div>
 
       <div class="form-actions">
-        <button type="submit" class="btn-save" [disabled]="miFormulario.invalid">
-          Guardar Usuario
-        </button>
-        <button type="button" routerLink="/usuarios" class="btn-cancel">
-          Cancelar
-        </button>
+        <p-button
+          type="submit"
+          label="Guardar Usuario"
+          icon="pi pi-check"
+          [disabled]="miFormulario.invalid"
+          styleClass="btn-save-prime"
+        />
+        <p-button
+          type="button"
+          label="Cancelar"
+          severity="secondary"
+          routerLink="/usuarios"
+          styleClass="btn-cancel-prime"
+        />
       </div>
 
     </form>

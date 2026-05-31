@@ -4,79 +4,75 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { UsuarioService } from '../../services/user.service';
 
+// PrimeNG
+import { ButtonModule } from 'primeng/button';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
+
 @Component({
   selector: 'app-usuario-edit',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink, ButtonModule, ToastModule],
+  providers: [MessageService],
   templateUrl: './user-edit.component.html',
-  styleUrls: ['./user-edit.component.css'] // Reutiliza los estilos de tus formularios
+  styleUrls: ['./user-edit.component.css']
 })
 export class UsuarioEditComponent implements OnInit {
   private usuarioService = inject(UsuarioService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private cdr = inject(ChangeDetectorRef);
+  private messageService = inject(MessageService);
 
   usuarioId!: number;
   usuarioEnEdicion: any = { password: '', rol: '', username: '' };
-  datosOriginales: any; 
+  datosOriginales: any;
 
   ngOnInit() {
     this.usuarioId = Number(this.route.snapshot.paramMap.get('id'));
-
     if (this.usuarioId) {
-      // Cargamos el usuario para saber qué valores actuales tiene
       this.usuarioService.getUsuarioById(this.usuarioId).subscribe({
         next: (data) => {
           this.usuarioEnEdicion = data;
-          this.datosOriginales = { ...data }; // Guardamos una copia exacta inicial de la BD
+          this.datosOriginales = { ...data };
           this.cdr.detectChanges();
         },
-        error: (err) => {
-          console.error(err);
-          alert('No se pudo cargar la información del usuario.');
-          this.router.navigate(['/usuarios']);
+        error: () => {
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudo cargar la información del usuario.' });
+          setTimeout(() => this.router.navigate(['/usuarios']), 1500);
         }
       });
     }
   }
 
-actualizar(formulario: NgForm) {
-  if (formulario.invalid) return;
+  actualizar(formulario: NgForm) {
+    if (formulario.invalid) return;
 
-  // Creamos un objeto vacío donde solo meteremos lo que realmente cambió
-  const camposModificados: any = {};
+    const camposModificados: any = {};
 
-// 1. Comparamos los campos contra los originales
-  if (this.usuarioEnEdicion.rol !== this.datosOriginales.rol) {
-    camposModificados.rol = this.usuarioEnEdicion.rol;
-  }
-  
-  // Para la contraseña, verificamos si escribieron algo real
-  if (this.usuarioEnEdicion.password && this.usuarioEnEdicion.password.trim() !== '') {
-    camposModificados.password = this.usuarioEnEdicion.password;
-  }
-   // Si el usuario no modificó nada, no hacemos la petición HTTP y volvemos
+    if (this.usuarioEnEdicion.rol !== this.datosOriginales.rol)
+      camposModificados.rol = this.usuarioEnEdicion.rol;
+
+    if (this.usuarioEnEdicion.password && this.usuarioEnEdicion.password.trim() !== '')
+      camposModificados.password = this.usuarioEnEdicion.password;
+
     if (Object.keys(camposModificados).length === 0) {
-      alert('No has realizado ningún cambio.');
-      this.router.navigate(['/usuarios']);
+      this.messageService.add({ severity: 'info', summary: 'Sin cambios', detail: 'No has realizado ningún cambio.' });
+      setTimeout(() => this.router.navigate(['/usuarios']), 1500);
       return;
     }
- console.log('Enviando cambios parciales al PATCH de Java:', camposModificados);
 
- // 2. SOLUCIÓN: Extraemos con un condicional. Si no cambiaron, mandamos string vacío.
-  const rolAEnviar = camposModificados.rol ? camposModificados.rol : '';
-  const passAEnviar = camposModificados.password ? camposModificados.password : '';
-  
-  this.usuarioService.updateUserAndPass(this.usuarioId, rolAEnviar, passAEnviar).subscribe({
-    next: () => {
-      alert('¡Usuario actualizado con éxito!');
-      this.router.navigate(['/usuarios']);
-    },
-    error: (err) => {
-      console.error(err);
-      alert('Error al actualizar el usuario.');
-    }
-  });
-}
+    const rolAEnviar = camposModificados.rol ?? '';
+    const passAEnviar = camposModificados.password ?? '';
+
+    this.usuarioService.updateUserAndPass(this.usuarioId, rolAEnviar, passAEnviar).subscribe({
+      next: () => {
+        this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'Usuario actualizado con éxito.' });
+        setTimeout(() => this.router.navigate(['/usuarios']), 1500);
+      },
+      error: () => {
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error al actualizar el usuario.' });
+      }
+    });
+  }
 }
