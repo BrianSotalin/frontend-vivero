@@ -23,14 +23,17 @@ export class UsuarioService {
   }
 
 updateUserAndPass(id: number, nuevoRol: string, nuevaPassword: string): Observable<any> {
-  // 1. Creamos el objeto JSON tal y como lo espera tu backend
-  const body = {
-    rol: nuevoRol,
-    password: nuevaPassword
-  };
+  const body: any = {};
 
-  // 2. Enviamos el objeto 'body' como segundo parámetro (sin HttpParams)
-  return this.http.patch<any>(`${this.apiUrl}/${id}`, body); 
+  if (nuevoRol && nuevoRol.trim() !== '') {
+    body.rol = nuevoRol;
+  }
+
+  if (nuevaPassword && nuevaPassword.trim() !== '') {
+    body.password = nuevaPassword;
+  }
+
+  return this.http.patch<any>(`${this.apiUrl}/${id}`, body);
 }
 
   deleteUsuario(id: number): Observable<any> {

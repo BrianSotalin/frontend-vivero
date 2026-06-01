@@ -33,7 +33,13 @@ tieneMayuscula(): boolean { return /[A-Z]/.test(this.usuarioEnEdicion.password |
 tieneMinuscula(): boolean { return /[a-z]/.test(this.usuarioEnEdicion.password || ''); }
 tieneEspecial(): boolean { return /[!@#$%^&*()\-_=+\[\]{};':",.<>/?]/.test(this.usuarioEnEdicion.password || ''); }
 tieneLength(): boolean { return (this.usuarioEnEdicion.password || '').length >= 8; }
-passwordValida(): boolean { return this.tieneLength() && this.tieneMayuscula() && this.tieneMinuscula() && this.tieneEspecial(); }
+passwordValida(): boolean {
+  const p = this.usuarioEnEdicion.password;
+  // Si está vacía, es válida (no se cambia)
+  if (!p || p.trim() === '') return true;
+  // Si tiene algo, debe cumplir las reglas
+  return this.tieneLength() && this.tieneMayuscula() && this.tieneMinuscula() && this.tieneEspecial();
+}
 
   ngOnInit() {
     this.usuarioId = Number(this.route.snapshot.paramMap.get('id'));
@@ -41,6 +47,7 @@ passwordValida(): boolean { return this.tieneLength() && this.tieneMayuscula() &
       this.usuarioService.getUsuarioById(this.usuarioId).subscribe({
         next: (data) => {
           this.usuarioEnEdicion = data;
+          this.usuarioEnEdicion.password = ''; 
           this.datosOriginales = { ...data };
           this.cargando.set(false);
           this.cdr.detectChanges();
