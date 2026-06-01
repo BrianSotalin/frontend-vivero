@@ -24,23 +24,36 @@
         </div>
       </div>
 
-      <div class="input-group">
-        <label for="password">Contraseña</label>
-        <input
-          type="password"
-          id="password"
-          [(ngModel)]="nuevoUsuario.password"
-          name="password"
-          required
-          minlength="6"
-          #passInput="ngModel"
-          placeholder="Mínimo 6 caracteres"
-        />
-        <div class="error-container" *ngIf="passInput.invalid && passInput.touched">
-          <small *ngIf="passInput.errors?.['required']">La contraseña es obligatoria.</small>
-          <small *ngIf="passInput.errors?.['minlength']">Debe tener al menos 6 caracteres.</small>
-        </div>
-      </div>
+<div class="input-group">
+  <label for="password">Contraseña</label>
+  <input
+    type="password"
+    id="password"
+    [(ngModel)]="nuevoUsuario.password"
+    name="password"
+    required
+    #passInput="ngModel"
+    placeholder="Mínimo 8 caracteres"
+  />
+  <div class="password-rules" *ngIf="passInput.touched || nuevoUsuario.password">
+    <small [class.valid]="tieneLength()" [class.invalid]="!tieneLength()">
+      <span class="pi" [class.pi-check]="tieneLength()" [class.pi-times]="!tieneLength()"></span>
+      Mínimo 8 caracteres
+    </small>
+    <small [class.valid]="tieneMayuscula()" [class.invalid]="!tieneMayuscula()">
+      <span class="pi" [class.pi-check]="tieneMayuscula()" [class.pi-times]="!tieneMayuscula()"></span>
+      Una letra mayúscula
+    </small>
+    <small [class.valid]="tieneMinuscula()" [class.invalid]="!tieneMinuscula()">
+      <span class="pi" [class.pi-check]="tieneMinuscula()" [class.pi-times]="!tieneMinuscula()"></span>
+      Una letra minúscula
+    </small>
+    <small [class.valid]="tieneEspecial()" [class.invalid]="!tieneEspecial()">
+      <span class="pi" [class.pi-check]="tieneEspecial()" [class.pi-times]="!tieneEspecial()"></span>
+      Un carácter especial (!@#$...)
+    </small>
+  </div>
+</div>
 
       <div class="input-group">
         <label for="rol">Rol del Usuario</label>
@@ -56,7 +69,7 @@
           type="submit"
           label="Guardar Usuario"
           icon="pi pi-check"
-          [disabled]="miFormulario.invalid"
+          [disabled]="miFormulario.invalid || !passwordValida()"
           styleClass="btn-save-prime"
         />
         <p-button

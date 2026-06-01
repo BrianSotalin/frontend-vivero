@@ -29,6 +29,12 @@ export class UsuarioEditComponent implements OnInit {
   usuarioEnEdicion: any = { password: '', rol: '', username: '' };
   datosOriginales: any;
 
+tieneMayuscula(): boolean { return /[A-Z]/.test(this.usuarioEnEdicion.password || ''); }
+tieneMinuscula(): boolean { return /[a-z]/.test(this.usuarioEnEdicion.password || ''); }
+tieneEspecial(): boolean { return /[!@#$%^&*()\-_=+\[\]{};':",.<>/?]/.test(this.usuarioEnEdicion.password || ''); }
+tieneLength(): boolean { return (this.usuarioEnEdicion.password || '').length >= 8; }
+passwordValida(): boolean { return this.tieneLength() && this.tieneMayuscula() && this.tieneMinuscula() && this.tieneEspecial(); }
+
   ngOnInit() {
     this.usuarioId = Number(this.route.snapshot.paramMap.get('id'));
     if (this.usuarioId) {

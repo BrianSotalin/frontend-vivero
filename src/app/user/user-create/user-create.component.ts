@@ -22,11 +22,18 @@ export class UsuarioCreateComponent {
   private router = inject(Router);
   private messageService = inject(MessageService);
 
+  tieneMayuscula(): boolean { return /[A-Z]/.test(this.nuevoUsuario.password || ''); }
+tieneMinuscula(): boolean { return /[a-z]/.test(this.nuevoUsuario.password || ''); }
+tieneEspecial(): boolean { return /[!@#$%^&*()\-_=+\[\]{};':",.<>/?]/.test(this.nuevoUsuario.password || ''); }
+tieneLength(): boolean { return (this.nuevoUsuario.password || '').length >= 8; }
+passwordValida(): boolean { return this.tieneLength() && this.tieneMayuscula() && this.tieneMinuscula() && this.tieneEspecial(); }
+
   nuevoUsuario = {
     username: '',
     password: '',
     rol: 'USER'
   };
+
 
   guardar(formulario: NgForm) {
     if (formulario.invalid) return;
