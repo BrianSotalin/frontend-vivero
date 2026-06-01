@@ -39,13 +39,15 @@ next: (response) => {
     this.router.navigate(['/dashboard']);
   }
 },
-      error: () => {
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: 'Credenciales incorrectas.'
-        });
-      }
+error: () => {
+  setTimeout(() => {
+    this.messageService.add({
+      severity: 'error',
+      summary: 'Error',
+      detail: 'Credenciales incorrectas.'
+    });
+  }, 100);
+}
     });
   }
 }
