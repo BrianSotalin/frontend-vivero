@@ -65,29 +65,37 @@ export class SalesDetailComponent implements OnInit {
     });
   }
   // Método para descargar el PDF de la venta
-  descargarPdf() {
-    if (!this.ventaId) return;
+descargarPdf() {
+  if (!this.ventaId) return;
+  this.cargandoPdf.set(true);
 
-    this.cargandoPdf.set(true);
-
-    this.salesService.getPdfVenta(this.ventaId).subscribe({
-      next: (res) => {
-        // Formamos el link con el prefijo correcto de Base64 para PDFs
-        const linkSource = `data:application/pdf;base64,${res.base64}`;
-        const downloadLink = document.createElement("a");
-        
-        downloadLink.href = linkSource;
-        downloadLink.download = res.nombreArchivo || `factura_venta_${this.ventaId}.pdf`;
-        
-        // Ejecutamos el click programático para forzar la descarga
-        downloadLink.click();
-        this.cargandoPdf.set(false);
-      },
-      error: (err) => {
-        console.error('Error al descargar el PDF:', err);
-        this.cargandoPdf.set(false);
-        // Aquí podrías usar un servicio de Toast de PrimeNG si lo tienes configurado
+  this.salesService.getPdfVenta(this.ventaId).subscribe({
+    next: (res) => {
+      // 1. Convertimos la cadena Base64 en un array de bytes
+      const byteCharacters = atob(res.base64);
+      const byteNumbers = new Array(byteCharacters.length);
+      for (let i = 0; i < byteCharacters.length; i++) {
+        byteNumbers[i] = byteCharacters.charCodeAt(i);
       }
-    });
-  }
+      const byteArray = new Uint8Array(byteNumbers);
+      
+      // 2. Creamos un BLOB (Binary Large Object) con el tipo mime correcto
+      const blob = new Blob([byteArray], { type: 'application/pdf' });
+      
+      // 3. Creamos una URL nativa del navegador para ese objeto
+      const blobUrl = URL.createObjectURL(blob);
+
+      // 4. En móviles es mucho mejor abrirlo en una nueva pestaña (Safari lo ama)
+      window.open(blobUrl, '_blank');
+
+      // Limpieza de memoria
+      setTimeout(() => URL.revokeObjectURL(blobUrl), 100);
+      this.cargandoPdf.set(false);
+    },
+    error: (err) => {
+      console.error('Error al descargar el PDF:', err);
+      this.cargandoPdf.set(false);
+    }
+  });
+}
 }
