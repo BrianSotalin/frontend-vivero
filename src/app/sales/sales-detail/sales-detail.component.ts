@@ -21,6 +21,7 @@ export class SalesDetailComponent implements OnInit {
   private cdr = inject(ChangeDetectorRef);
 
   venta = signal<any>(null);
+  cargandoPdf = signal<boolean>(false);
 
   saldoPendiente = computed(() => {
     const datosVenta = this.venta();
@@ -60,6 +61,32 @@ export class SalesDetailComponent implements OnInit {
       error: (err: any) => {
         console.error('Error al cargar el detalle:', err);
         this.router.navigate(['/ventas']);
+      }
+    });
+  }
+  // Método para descargar el PDF de la venta
+  descargarPdf() {
+    if (!this.ventaId) return;
+
+    this.cargandoPdf.set(true);
+
+    this.salesService.getPdfVenta(this.ventaId).subscribe({
+      next: (res) => {
+        // Formamos el link con el prefijo correcto de Base64 para PDFs
+        const linkSource = `data:application/pdf;base64,${res.base64}`;
+        const downloadLink = document.createElement("a");
+        
+        downloadLink.href = linkSource;
+        downloadLink.download = res.nombreArchivo || `factura_venta_${this.ventaId}.pdf`;
+        
+        // Ejecutamos el click programático para forzar la descarga
+        downloadLink.click();
+        this.cargandoPdf.set(false);
+      },
+      error: (err) => {
+        console.error('Error al descargar el PDF:', err);
+        this.cargandoPdf.set(false);
+        // Aquí podrías usar un servicio de Toast de PrimeNG si lo tienes configurado
       }
     });
   }

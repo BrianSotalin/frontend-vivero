@@ -23,6 +23,10 @@ export class SalesService {
   updateSale(id: number, saleData: any): Observable<any> {
   return this.http.patch<any>(`${this.apiUrl}/${id}`, saleData);
 }
+// Método para obtener el PDF de la venta
+getPdfVenta(id: number): Observable<{ nombreArchivo: string, base64: string }> {
+  return this.http.get<{ nombreArchivo: string, base64: string }>(`${this.apiUrl}/${id}/pdf`);
+}
   // Método para la eliminación
   deleteSale(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);

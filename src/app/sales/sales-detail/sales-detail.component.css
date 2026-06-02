@@ -270,6 +270,15 @@
   border-top: 1px solid #dee2e6;
   margin: 10px 0;
 }
+/* Contenedor para el botón de descargar PDF */
+.pdf-actions-section {
+  display: flex;
+  justify-content: center; /* Centra horizontalmente el contenido */
+  align-items: center;
+  margin-top: 24px;        /* Espacio de separación con la tarjeta de arriba */
+  margin-bottom: 16px;     /* Espacio de seguridad inferior */
+  width: 100%;             /* Asegura que tome todo el ancho disponible para centrar bien */
+}
 @media (max-width: 768px) {
     .main-grid {
     grid-template-columns: 1fr;

@@ -5,6 +5,7 @@
       <span class="material-icons icon-main">list</span>
       Detalle de Venta: <span class="code-text">{{ venta()?.codigo }}</span>
     </h2>
+
     <p-button
       label="Volver al Historial"
       icon="pi pi-arrow-left"
@@ -36,12 +37,13 @@
 
       <div class="info-item">
         <span class="info-label">Datos del Cliente</span>
-  <div class="info-value-row">
+   <div class="info-value-row">
     <span class="material-icons">person</span>
     <strong class="info-value">
       {{ venta()?.cliente ? venta()?.cliente?.nombre : 'Consumidor Final' }}
     </strong>
-  </div>
+
+   </div>
         <small *ngIf="venta()?.cliente" class="client-phone">
           <span class="material-icons">phone</span>
           {{ venta()?.cliente?.telefono || 'Sin teléfono' }}
@@ -108,6 +110,16 @@
 
       </div>
     </div>
-
+    <div class="pdf-actions-section">
+          <p-button
+        *ngIf="venta()"
+        label="Descargar PDF"
+        icon="pi pi-file-pdf"
+        severity="contrast"
+        [loading]="cargandoPdf()"
+        (onClick)="descargarPdf()"
+      />
+    </div>
   </div>
+
 </div>
