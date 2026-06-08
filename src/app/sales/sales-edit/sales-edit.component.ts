@@ -15,6 +15,7 @@ import { MessageService } from 'primeng/api';
 import { CardModule } from 'primeng/card';
 import { DividerModule } from 'primeng/divider';
 import { TagModule } from 'primeng/tag';
+import { DatePickerModule } from 'primeng/datepicker';
 
 @Component({
   selector: 'app-sales-edit',
@@ -30,6 +31,7 @@ import { TagModule } from 'primeng/tag';
     CardModule,
     DividerModule,
     TagModule,
+    DatePickerModule,
   ],
   providers: [MessageService],
   templateUrl: './sales-edit.component.html',
@@ -50,6 +52,7 @@ export class SalesEditComponent implements OnInit {
 
   // Encabezado
   clienteSeleccionadoId: number | null = null;
+  fechaSeleccionada: Date = new Date();
 
   // Carrito
   carrito = signal<any[]>([]);
@@ -87,6 +90,10 @@ export class SalesEditComponent implements OnInit {
         this.clienteSeleccionadoId = data.cliente?.id ?? null;
         this.estadoSeleccionado = data.estado;
         this.montoAbonado = data.abono ?? 0;
+        // Ajustamos la fecha para mostrarla correctamente en el datepicker
+        if (data.fecha) {
+          this.fechaSeleccionada = new Date(data.fecha);
+        }
         // Cargamos los detalles existentes en el carrito
         this.carrito.set(
           data.detalles.map((d: any) => ({
@@ -158,14 +165,18 @@ export class SalesEditComponent implements OnInit {
       return;
     }
 
-const payload: any = {
-  estado: this.estadoSeleccionado,
-  abono: this.estadoSeleccionado === 2 ? this.montoAbonado : 0,
-  detalles: this.carrito().map((item) => ({
-    producto: { id: item.producto.id },
-    cantidad: item.cantidad,
-    precio: item.precio,
-  })),
+    const offset = this.fechaSeleccionada.getTimezoneOffset() * 60000;
+    const fechaISO = new Date(this.fechaSeleccionada.getTime() - offset).toISOString().slice(0, 19);
+
+    const payload: any = {
+      fecha: fechaISO,
+      estado: this.estadoSeleccionado,
+      abono: this.estadoSeleccionado === 2 ? this.montoAbonado : 0,
+      detalles: this.carrito().map((item) => ({
+      producto: { id: item.producto.id },
+      cantidad: item.cantidad,
+      precio: item.precio,
+    })),
 };
 
     if (this.clienteSeleccionadoId) {

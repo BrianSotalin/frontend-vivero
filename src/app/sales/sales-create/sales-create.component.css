@@ -111,6 +111,18 @@
   padding: 9px;
 }
 
+/* Asegura que el DatePicker de PrimeNG use el 100% de la tarjeta */
+:host ::ng-deep .p-datepicker {
+  width: 100%;
+}
+:host ::ng-deep .p-datepicker input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #cbd5e1;
+  font-size: 0.95rem;
+}
+
 .input-label {
   display: block;
   font-size: 0.85rem;

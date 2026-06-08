@@ -1,8 +1,10 @@
 <p-toast />
-  <div *ngIf="!venta()" class="loading-container">
-    <span class="material-icons loading-spinner">cached</span>
-    <p>Cargando información de la venta...</p>
-  </div>
+
+<div *ngIf="!venta()" class="loading-container">
+  <span class="material-icons loading-spinner">cached</span>
+  <p>Cargando información de la venta...</p>
+</div>
+
 <div class="container" *ngIf="venta()">
   <div class="header-container">
     <h2>
@@ -14,42 +16,62 @@
 
   <div class="main-grid">
 
-    <!-- Columna izquierda -->
     <div class="forms-column">
 
-      <!-- Cliente -->
-      <p-card header="Cliente">
-        <select [(ngModel)]="clienteSeleccionadoId" class="form-select">
-          <option [ngValue]="null">Consumidor Final</option>
-          <option *ngFor="let c of clientes()" [value]="c.id">{{ c.nombre }}</option>
-        </select>
+      <p-card header="Información de la Venta">
+        <div style="display: flex; flex-direction: column; gap: 15px;">
+          
+          <div>
+            <label class="input-label">
+              <span class="material-icons" style="font-size: 18px; vertical-align: middle;">person</span> Cliente:
+            </label>
+            <select [(ngModel)]="clienteSeleccionadoId" class="form-select">
+              <option [ngValue]="null">Consumidor Final</option>
+              <option *ngFor="let c of clientes()" [value]="c.id">{{ c.nombre }}</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="input-label">
+              <span class="material-icons" style="font-size: 18px; vertical-align: middle;">calendar_today</span> Fecha y Hora de Venta:
+            </label>
+            <p-datepicker 
+              [(ngModel)]="fechaSeleccionada" 
+              dateFormat="dd/mm/yy" 
+              [showIcon]="true" 
+              [showTime]="true" 
+              hourFormat="24"
+              styleClass="w-full"
+              appendTo="body"
+            />
+          </div>
+
+        </div>
       </p-card>
       
-<!-- Estado del Pago -->
-<p-card header="Estado del Pago">
-  <select [(ngModel)]="estadoSeleccionado" class="form-select">
-    <option [ngValue]="0">PAGADA (Monto completo recibido)</option>
-    <option [ngValue]="1">DEUDA (Por cobrar / Crédito)</option>
-    <option [ngValue]="2">ABONADO (Pago parcial)</option>
-  </select>
+      <p-card header="Estado del Pago">
+        <select [(ngModel)]="estadoSeleccionado" class="form-select">
+          <option [ngValue]="0">PAGADA (Monto completo recibido)</option>
+          <option [ngValue]="1">DEUDA (Por cobrar / Crédito)</option>
+          <option [ngValue]="2">ABONADO (Pago parcial)</option>
+        </select>
 
-  <!-- Campo abono, solo visible si estado es 2 -->
-  <div *ngIf="estadoSeleccionado === 2" class="abono-box">
-    <label class="input-label">Monto abonado ($):</label>
-    <input
-      type="number"
-      [(ngModel)]="montoAbonado"
-      min="0"
-      [max]="totalVenta()"
-      step="0.01"
-      class="form-input"
-    />
-    <small class="abono-restante">
-      Restante por pagar: ${{ (totalVenta() - montoAbonado) | number:'1.2-2' }}
-    </small>
-  </div>
-</p-card>
-      <!-- Agregar productos -->
+        <div *ngIf="estadoSeleccionado === 2" class="abono-box">
+          <label class="input-label">Monto abonado ($):</label>
+          <input
+            type="number"
+            [(ngModel)]="montoAbonado"
+            min="0"
+            [max]="totalVenta()"
+            step="0.01"
+            class="form-input"
+          />
+          <small class="abono-restante">
+            Restante por pagar: ${{ (totalVenta() - montoAbonado) | number:'1.2-2' }}
+          </small>
+        </div>
+      </p-card>
+
       <p-card header="Agregar Productos">
         <div class="product-inputs">
           <div>
@@ -81,7 +103,6 @@
 
     </div>
 
-    <!-- Columna derecha: Resumen -->
     <div class="summary-card">
       <h3 class="summary-title">
         <span class="material-icons">shopping_bag</span> Resumen del Pedido
@@ -130,4 +151,3 @@
 
   </div>
 </div>
-

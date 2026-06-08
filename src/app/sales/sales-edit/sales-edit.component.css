@@ -55,6 +55,18 @@ h2 {
   border-radius: 8px;
   font-size: 14px;
 }
+/* Asegura que el DatePicker llene el ancho del contenedor en edición */
+:host ::ng-deep .p-datepicker {
+  width: 100%;
+}
+:host ::ng-deep .p-datepicker input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #cbd5e1;
+  font-size: 0.95rem;
+  box-sizing: border-box;
+}
 .abono-box {
   margin-top: 12px;
   display: flex;

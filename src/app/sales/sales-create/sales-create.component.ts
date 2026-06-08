@@ -14,6 +14,7 @@ import { CardModule } from 'primeng/card';
 import { DividerModule } from 'primeng/divider';
 import { SelectModule } from 'primeng/select';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { DatePickerModule } from 'primeng/datepicker';
 
 @Component({
   selector: 'app-sales-create',
@@ -28,6 +29,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
     DividerModule,
     SelectModule,
     InputNumberModule,
+    DatePickerModule
   ],
   providers: [MessageService],
   templateUrl: './sales-create.component.html',
@@ -44,6 +46,7 @@ export class SalesCreateComponent implements OnInit {
   clientes = signal<any[]>([]);
   clienteSeleccionadoId = signal<number | null>(null);
   carrito = signal<any[]>([]);
+  fechaSeleccionada: Date = new Date();
 
   precioModificable: number = 0;
   productoSeleccionado: any = null;
@@ -126,8 +129,12 @@ export class SalesCreateComponent implements OnInit {
       this.messageService.add({ severity: 'warn', summary: 'Atención', detail: 'Debes agregar al menos un artículo.' });
       return;
     }
+    // Usamos el ajuste de zona horaria local para evitar que se mueva de día
+    const tzoffset = this.fechaSeleccionada.getTimezoneOffset() * 60000;
+    const fechaISO = new Date(this.fechaSeleccionada.getTime() - tzoffset).toISOString().slice(0, 19);
 
     const payload: any = {
+      fecha: fechaISO,
       estado: this.estadoPagoSeleccionado,
       abono: this.estadoPagoSeleccionado === 2 ? this.montoAbonado : 0,
       detalles: this.carrito().map(item => ({

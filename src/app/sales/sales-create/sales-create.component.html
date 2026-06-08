@@ -21,6 +21,21 @@
 
           <div>
             <label class="input-label">
+              <span class="material-icons icon-muted">calendar_today</span> Fecha de Venta
+            </label>
+            <p-datepicker 
+              [(ngModel)]="fechaSeleccionada" 
+              dateFormat="dd/mm/yy" 
+              [showIcon]="true" 
+              [showTime]="true" 
+              hourFormat="24"
+              styleClass="w-full"
+              appendTo="body"
+            />
+          </div>
+
+          <div>
+            <label class="input-label">
               <span class="material-icons icon-muted">person</span> Cliente
             </label>
             <select [(ngModel)]="clienteSeleccionadoId" class="form-select">
