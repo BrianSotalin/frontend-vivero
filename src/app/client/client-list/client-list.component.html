@@ -54,6 +54,18 @@
         <td>{{ cli.telefono || 'N/A' }}</td>
         <td>{{ cli.email || 'N/A' }}</td>
         <td style="text-align: center">
+
+          <p-button
+            *ngIf="cli.telefono && cli.telefono.trim() !== ''"
+            icon="pi pi-whatsapp"
+            [rounded]="true"
+            [text]="true"
+            severity="success"
+            (click)="enviarWhatsApp(cli.telefono)"
+            title="Enviar WhatsApp"
+            styleClass="p-button-whatsapp"
+          />
+          
           <p-button
             icon="pi pi-pencil"
             [rounded]="true"

@@ -82,4 +82,18 @@ export class ClientListComponent implements OnInit {
       },
     });
   }
+ 
+
+enviarWhatsApp(telefono: string): void {
+  if (!telefono) return;
+  
+  // Limpiamos el string para dejar solo números puros (elimina espacios, guiones, "+", etc.)
+  const numeroLimpio = telefono.replace(/\D/g, '');
+  
+  // Crea el enlace oficial de la API de WhatsApp
+  const url = `https://wa.me/+593${numeroLimpio}`;
+  
+  // Abre el chat en una pestaña nueva del navegador o en la App de WhatsApp móvil
+  window.open(url, '_blank');
+}
 }

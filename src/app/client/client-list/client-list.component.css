@@ -60,6 +60,14 @@ h2 {
 :host ::ng-deep .table-caption .p-iconfield input {
   width: 100%;
 }
+/* Color personalizado para el botón de WhatsApp de PrimeNG */
+:host ::ng-deep .p-button-whatsapp {
+  color: #25D366 !important;
+}
+
+:host ::ng-deep .p-button-whatsapp:hover {
+  background: rgba(37, 211, 102, 0.08) !important;
+}
 /* En móvil, el caption se apila verticalmente */
 @media (max-width: 768px) {
     .container h2{
