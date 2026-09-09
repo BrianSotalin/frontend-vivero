@@ -52,7 +52,7 @@
       <tr>
         <td><span class="badge-code">{{ venta.codigo }}</span></td>
         <td>{{ venta.fecha | date:'dd/MM/yyyy' }}</td>
-        <td>{{ venta.cliente ? venta.cliente.nombre : 'Consumidor Final' }}</td>
+        <td>{{ venta.nombreCliente || 'Consumidor Final' }}</td>
         <td><b>${{ venta.total | number:'1.2-2' }}</b></td>
         <td>
           <p-tag

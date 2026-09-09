@@ -1,9 +1,11 @@
 import { Component, inject, signal, afterNextRender } from '@angular/core';
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import { EstadisticasService } from '../services/stadistics.service';
+import { ProductService } from '../services/product.service';
 import { ChartModule } from 'primeng/chart';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
+import { forkJoin } from 'rxjs';
 
 const MESES = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun',
                 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
@@ -19,6 +21,7 @@ const MESES = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun',
 export class DashboardComponent {
   private statsService = inject(EstadisticasService);
   private messageService = inject(MessageService);
+  private productoService = inject(ProductService);
 
   resumen = signal<any>(null);
   chartVentasPorMes = signal<any>(null);
@@ -108,20 +111,39 @@ this.statsService.getResumen().subscribe({
       error: (err) => console.error('Error cargando ventas por mes', err)
     });
 
-    this.statsService.getTopProductos().subscribe({
-      next: (data) => {
-        this.chartTopProductos.set({
-          labels: data.map(d => d.nombre),
-          datasets: [{
-            label: 'Unidades',
-            data: data.map(d => d.cantidad),
-            backgroundColor: [
-              '#66BB6A', '#42A5F5', '#FFA726', '#AB47BC', '#26C6DA'
-            ],
-          }]
-        });
-      },
-      error: (err) => console.error('Error cargando top productos', err)
+// Lanzamos ambas peticiones en paralelo de manera eficiente
+forkJoin({
+  topProductos: this.statsService.getTopProductos(),
+  catalogo: this.productoService.getProductos() // 👈 Asegúrate de usar el nombre real de tu servicio de productos
+}).subscribe({
+  next: ({ topProductos, catalogo }) => {
+    
+    // 1. Mapeamos las etiquetas buscando el nombre real de la planta en el catálogo
+    const labelsMapeadas = topProductos.map(item => {
+      // Buscamos coincidencia comparando IDs como String
+      const plantaReal = catalogo.find(p => p.id.toString() === item.nombre.toString());
+      return plantaReal ? plantaReal.nombre : `Producto ${item.nombre}`;
     });
+
+    // 2. Extraemos las cantidades
+    const cantidadesMapeadas = topProductos.map(item => item.cantidad);
+
+    // 3. Seteamos el Signal con el objeto completamente estructurado de golpe
+    this.chartTopProductos.set({
+      labels: labelsMapeadas,
+      datasets: [{
+        label: 'Unidades Vendidas',
+        data: cantidadesMapeadas,
+        backgroundColor: [
+          '#66BB6A', '#42A5F5', '#FFA726', '#AB47BC', '#26C6DA'
+        ],
+        borderWidth: 1
+      }]
+    });
+  },
+  error: (err) => {
+    console.error('Error cruzando datos de estadísticas e inventario:', err);
+  }
+});
   }
 }

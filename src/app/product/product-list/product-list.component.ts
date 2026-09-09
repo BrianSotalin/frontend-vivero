@@ -47,10 +47,28 @@ export class ProductListComponent implements OnInit {
     this.cargarProductos();
   }
 
-  cargarProductos() {
+cargarProductos() {
     this.productService.getProductos().subscribe({
-      next: (data) => this.productos.set(data),
-      error: (err) => console.error('Error cargando productos', err),
+      next: (data: any) => {
+        console.log('Estructura cruda que llega al componente:', data);
+
+        // 🎯 Si viene envuelto en un Page de Spring (data.content), lo desenvolvemos
+        if (data && data.content) {
+          this.productos.set(data.content);
+        } 
+        // 🎯 Fallback seguro por si en el futuro devuelve el array directo []
+        else if (Array.isArray(data)) {
+          this.productos.set(data);
+        } 
+        // 🎯 En caso de que venga vacío o nulo
+        else {
+          this.productos.set([]);
+        }
+      },
+      error: (err) => {
+        console.error('Error cargando productos:', err);
+        this.productos.set([]); // Evitamos que la tabla rompa el estado
+      },
     });
   }
 

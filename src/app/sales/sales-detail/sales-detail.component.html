@@ -37,17 +37,12 @@
 
       <div class="info-item">
         <span class="info-label">Datos del Cliente</span>
-   <div class="info-value-row">
-    <span class="material-icons">person</span>
-    <strong class="info-value">
-      {{ venta()?.cliente ? venta()?.cliente?.nombre : 'Consumidor Final' }}
-    </strong>
-
-   </div>
-        <small *ngIf="venta()?.cliente" class="client-phone">
-          <span class="material-icons">phone</span>
-          {{ venta()?.cliente?.telefono || 'Sin teléfono' }}
-        </small>
+        <div class="info-value-row">
+          <span class="material-icons">person</span>
+          <strong class="info-value">
+            {{ venta()?.clienteId ?  nombreCliente() || 'Cargando cliente...' : 'Consumidor Final' }}
+          </strong>
+        </div>
       </div>
     </div>
 
@@ -68,7 +63,9 @@
       <tbody>
         <tr *ngFor="let item of venta()?.detalles">
           <td>
-            <div class="product-name">{{ item.producto.producto }}</div>
+            <div class="product-name">
+              {{ nombresProductos()[item.productoId?.toString()] || 'Cargando producto...' }}
+            </div>
           </td>
           <td class="text-center text-bold quantity-cell">{{ item.cantidad }}</td>
           <td class="text-right price-cell">${{ item.precio | number:'1.2-2' }}</td>
@@ -110,8 +107,9 @@
 
       </div>
     </div>
+
     <div class="pdf-actions-section">
-          <p-button
+      <p-button
         *ngIf="venta()"
         label="Descargar PDF"
         icon="pi pi-file-pdf"

@@ -16,6 +16,7 @@ import { CardModule } from 'primeng/card';
 import { DividerModule } from 'primeng/divider';
 import { TagModule } from 'primeng/tag';
 import { DatePickerModule } from 'primeng/datepicker';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-sales-edit',
@@ -65,12 +66,22 @@ export class SalesEditComponent implements OnInit {
   estadoSeleccionado: number = 0;
   montoAbonado: number = 0;
 
-  ngOnInit() {
-    const id = Number(this.route.snapshot.paramMap.get('id'));
-    this.ventaId.set(id);
-    this.cargarCatalogos();
-    this.cargarVenta(id);
-  }
+ngOnInit() {
+  const id = Number(this.route.snapshot.paramMap.get('id'));
+  this.ventaId.set(id);
+
+  // Aseguramos que los catálogos existan antes de pintar la venta
+  forkJoin({
+    productos: this.productService.getProductos(),
+    clientes: this.clienteService.getClientes()
+  }).subscribe({
+    next: (res) => {
+      this.productos.set(res.productos);
+      this.clientes.set(res.clientes);
+      this.cargarVenta(id); // Ahora ya existen los productos en el signal
+    }
+  });
+}
 
   cargarCatalogos() {
     this.productService.getProductos().subscribe({
@@ -83,29 +94,38 @@ export class SalesEditComponent implements OnInit {
     });
   }
 
-  cargarVenta(id: number) {
-    this.salesService.getSalesById(id).subscribe({
-      next: (data) => {
-        this.venta.set(data);
-        this.clienteSeleccionadoId = data.cliente?.id ?? null;
-        this.estadoSeleccionado = data.estado;
-        this.montoAbonado = data.abono ?? 0;
-        // Ajustamos la fecha para mostrarla correctamente en el datepicker
-        if (data.fecha) {
-          this.fechaSeleccionada = new Date(data.fecha);
-        }
-        // Cargamos los detalles existentes en el carrito
-        this.carrito.set(
-          data.detalles.map((d: any) => ({
-            producto: { id: d.producto.id, nombre: d.producto.producto },
-            cantidad: d.cantidad,
-            precio: d.precio,
-          }))
-        );
-      },
-      error: (err) => console.error('Error cargando venta', err),
-    });
-  }
+cargarVenta(id: number) {
+  this.salesService.getSalesById(id).subscribe({
+    next: (data) => {
+      this.venta.set(data);
+      this.clienteSeleccionadoId = data.clienteId;
+      this.estadoSeleccionado = data.estado;
+      this.montoAbonado = data.abono ?? 0;
+      
+      if (data.fecha) {
+        this.fechaSeleccionada = new Date(data.fecha);
+      }
+
+      // Ahora productos() ya tiene contenido, el mapeo funcionará
+const productosActuales = this.productos(); // Obtenemos el valor actual
+      const detallesMapeados = data.detalles.map((d: any) => {
+        const prod = productosActuales.find(p => p.id === d.productoId);
+        return {
+          producto: { 
+            id: d.productoId, 
+            nombre: prod ? prod.producto : 'No encontrado' 
+          },
+          cantidad: d.cantidad,
+          precio: d.precio,
+        };
+      });
+      
+      this.carrito.set(JSON.parse(JSON.stringify(detallesMapeados)));
+      
+      console.log('Carrito final:', this.carrito());
+    }
+  });
+}
 
   onProductoChange(producto: any) {
     if (producto) {
@@ -159,7 +179,7 @@ export class SalesEditComponent implements OnInit {
     this.carrito().reduce((sum, item) => sum + item.cantidad * item.precio, 0)
   );
 
-  guardarCambios() {
+ guardarCambios() {
     if (this.carrito().length === 0) {
       this.messageService.add({ severity: 'warn', summary: 'Atención', detail: 'Debes agregar al menos un artículo.' });
       return;
@@ -172,15 +192,17 @@ export class SalesEditComponent implements OnInit {
       fecha: fechaISO,
       estado: this.estadoSeleccionado,
       abono: this.estadoSeleccionado === 2 ? this.montoAbonado : 0,
+      
+      // CORRECCIÓN AQUÍ:
       detalles: this.carrito().map((item) => ({
-      producto: { id: item.producto.id },
-      cantidad: item.cantidad,
-      precio: item.precio,
-    })),
-};
+        productoId: item.producto.id, // Enviar directamente el valor numérico
+        cantidad: item.cantidad,
+        precio: item.precio,
+      })),
+    };
 
     if (this.clienteSeleccionadoId) {
-      payload.cliente = { id: Number(this.clienteSeleccionadoId) };
+      payload.clienteId = Number(this.clienteSeleccionadoId); 
     }
 
     this.salesService.updateSale(this.ventaId(), payload).subscribe({
@@ -192,5 +214,5 @@ export class SalesEditComponent implements OnInit {
         this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error?.message || 'No se pudo actualizar la venta.' });
       },
     });
-  }
+}
 }

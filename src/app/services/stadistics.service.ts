@@ -9,7 +9,7 @@ import { environment } from '../../environments/environment';
 export class EstadisticasService {
 // 1. Usamos inject() que es el estándar de Angular 18
   private http = inject(HttpClient);
-  private apiUrl = `${environment.apiUrl}/estadisticas`;
+  private apiUrl = `${environment.apiUrl}/ventas/estadisticas`;
 
 getResumen(): Observable<any> {
   return this.http.get(`${this.apiUrl}/resumen`);

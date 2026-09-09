@@ -138,16 +138,18 @@ export class SalesCreateComponent implements OnInit {
       estado: this.estadoPagoSeleccionado,
       abono: this.estadoPagoSeleccionado === 2 ? this.montoAbonado : 0,
       detalles: this.carrito().map(item => ({
-        producto: { id: item.producto.id },
+        productoId: item.producto.id ,
         cantidad: item.cantidad,
         precio: item.precio
       }))
     };
 
     if (this.clienteSeleccionadoId()) {
-      payload.cliente = { id: Number(this.clienteSeleccionadoId()) };
+      payload.clienteId = Number(this.clienteSeleccionadoId());
     }
 
+    console.log("JSON a enviar al servidor:", JSON.stringify(payload, null, 2));
+    
     this.salesService.createSale(payload).subscribe({
       next: (res: any) => {
         this.messageService.add({ severity: 'success', summary: 'Éxito', detail: `Venta registrada. Código: ${res.codigo}` });
